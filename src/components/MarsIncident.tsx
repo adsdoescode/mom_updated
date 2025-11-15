@@ -5,6 +5,7 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { AlertTriangle, Rocket, Database, MapPin } from 'lucide-react';
 import Quiz from './Quiz';
+import './Quiz.css';
 
 interface MarsIncidentProps {
   onPasswordFound: (password: string) => void;
@@ -411,7 +412,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   </p>
                   <button
                     onClick={() => setShowQuiz(true)}
-                    className="mt-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors"
+                    className="submit-button mt-4"
                   >
                     Open Quiz
                   </button>
@@ -420,43 +421,44 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
             </div>
 
             {/* Access Code Keypad - Always visible */}
-            <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50">
-              <h4 className="text-red-400 mb-3 text-sm font-semibold">System Access Terminal</h4>
-              <div className="space-y-4">
+            <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50 max-w-[280px] mx-auto">
+              <h4 className="text-red-400 mb-3 text-sm font-semibold text-center">System Access Terminal</h4>
+              <div className="space-y-3">
                 {/* Display */}
-                <div className="p-4 bg-slate-950/50 rounded border border-slate-700/50 font-mono text-right">
+                <div className="p-3 bg-slate-950/50 rounded border border-slate-700/50 font-mono text-right">
                   <div className="text-xs text-slate-500 mb-1">Enter Access Code</div>
-                  <div className="text-2xl text-slate-300 min-h-[2rem]">
-                    {enteredCode || <span className="text-slate-600">_</span>}
+                  <div className="text-2xl text-slate-300 min-h-[2rem] flex items-center justify-end">
+                    <span>{enteredCode}</span>
+                    <span className="blinking-cursor"></span>
                   </div>
                 </div>
 
                 {/* Keypad */}
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-1.5">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                     <button
                       key={num}
                       onClick={() => handleKeypadInput(num.toString())}
-                      className="px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-colors"
+                      className="px-2 py-3 bg-slate-800 hover:bg-slate-600 hover:border-slate-500 hover:brightness-110 hover:scale-105 active:scale-95 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-all duration-200 shadow-sm hover:shadow-md"
                     >
                       {num}
                     </button>
                   ))}
                   <button
                     onClick={handleKeypadClear}
-                    className="px-4 py-3 bg-red-900/50 hover:bg-red-900/70 border border-red-800/50 rounded text-red-300 text-sm transition-colors"
+                    className="px-2 py-3 bg-red-900/50 hover:bg-red-800/70 hover:border-red-600 hover:brightness-110 hover:scale-105 active:scale-95 border border-red-800/50 rounded text-red-300 text-xs transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     Clear
                   </button>
                   <button
                     onClick={() => handleKeypadInput('0')}
-                    className="px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-colors"
+                    className="px-2 py-3 bg-slate-800 hover:bg-slate-600 hover:border-slate-500 hover:brightness-110 hover:scale-105 active:scale-95 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     0
                   </button>
                   <button
                     onClick={handleKeypadBackspace}
-                    className="px-4 py-3 bg-amber-900/50 hover:bg-amber-900/70 border border-amber-800/50 rounded text-amber-300 text-sm transition-colors"
+                    className="px-2 py-3 bg-amber-900/50 hover:bg-amber-800/70 hover:border-amber-600 hover:brightness-110 hover:scale-105 active:scale-95 border border-amber-800/50 rounded text-amber-300 text-xs transition-all duration-200 shadow-sm hover:shadow-md"
                   >
                     ⌫
                   </button>
@@ -466,7 +468,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                 <button
                   onClick={handleKeypadSubmit}
                   disabled={!enteredCode}
-                  className="w-full px-4 py-3 bg-green-700 hover:bg-green-600 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed border border-green-600 rounded text-white font-semibold transition-colors"
+                  className="submit-button w-full"
                 >
                   Verify Access Code
                 </button>

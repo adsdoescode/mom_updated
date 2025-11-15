@@ -205,6 +205,26 @@
   transform: translateY(-2px);
 }
 
+/* Blinking cursor animation */
+@keyframes blink {
+  0%, 50% {
+    opacity: 1;
+  }
+  51%, 100% {
+    opacity: 0;
+  }
+}
+
+.blinking-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.75rem;
+  background-color: #61dafb;
+  margin-left: 4px;
+  animation: blink 1s infinite;
+  vertical-align: middle;
+}
+
 /* Smooth scrolling for the page */
 html {
   scroll-behavior: smooth;
