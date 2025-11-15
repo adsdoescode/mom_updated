@@ -14,6 +14,9 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
   const [clickedElements, setClickedElements] = useState<string[]>([]);
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizCompletedCorrectly, setQuizCompletedCorrectly] = useState(false);
+  const [correctAccessCode, setCorrectAccessCode] = useState<number | null>(null);
+  const [enteredCode, setEnteredCode] = useState<string>('');
+  const [codeVerified, setCodeVerified] = useState(false);
 
   const handleHiddenClick = (element: string, password: string) => {
     if (!clickedElements.includes(element)) {
@@ -56,10 +59,70 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     }
   };
 
+  const handleKeypadInput = (digit: string) => {
+    if (enteredCode.length < 10) { // Limit to reasonable length
+      setEnteredCode(enteredCode + digit);
+    }
+  };
+
+  const handleKeypadClear = () => {
+    setEnteredCode('');
+    setCodeVerified(false);
+  };
+
+  const handleKeypadBackspace = () => {
+    setEnteredCode(enteredCode.slice(0, -1));
+    setCodeVerified(false);
+  };
+
+  const handleKeypadSubmit = () => {
+    if (correctAccessCode === null) {
+      // Quiz not completed correctly yet
+      const notification = document.createElement('div');
+      notification.textContent = '✗ Complete the quiz with all correct answers first';
+      notification.className = 'fixed bottom-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 2000);
+      return;
+    }
+
+    const entered = parseInt(enteredCode, 10);
+    if (isNaN(entered)) {
+      const notification = document.createElement('div');
+      notification.textContent = '✗ Please enter a valid access code';
+      notification.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 2000);
+      return;
+    }
+
+    if (entered === correctAccessCode) {
+      setCodeVerified(true);
+    } else {
+      setEnteredCode('');
+      setCodeVerified(false);
+      // Show error feedback
+      const notification = document.createElement('div');
+      notification.textContent = '✗ Access code incorrect';
+      notification.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 2000);
+    }
+  };
+
   if (showQuiz) {
     return <Quiz 
       onClose={() => setShowQuiz(false)} 
-      onAllCorrect={() => setQuizCompletedCorrectly(true)}
+      onAllCorrect={(accessCode) => {
+        setQuizCompletedCorrectly(true);
+        setCorrectAccessCode(accessCode);
+      }}
+      onQuizSubmitted={(accessCode, allCorrect) => {
+        if (allCorrect) {
+          setQuizCompletedCorrectly(true);
+          setCorrectAccessCode(accessCode);
+        }
+      }}
     />;
   }
 
@@ -348,28 +411,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   </p>
                   <button
                     onClick={() => setShowQuiz(true)}
-                    className="mt-4 submit-button"
-                    style={{
-                      padding: '12px 32px',
-                      background: '#61dafb',
-                      color: '#1e1e1e',
-                      border: 'none',
-                      borderRadius: '4px',
-                      fontWeight: 600,
-                      cursor: 'pointer',
-                      transition: 'all 0.2s ease',
-                      fontSize: '14px'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = '#4fa8c5';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(97, 218, 251, 0.3)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = '#61dafb';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
+                    className="mt-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors"
                   >
                     Open Quiz
                   </button>
@@ -377,8 +419,62 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               </div>
             </div>
 
-            {/* Secret password element - appears as a random data point */}
-            {quizCompletedCorrectly && (
+            {/* Access Code Keypad - Always visible */}
+            <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50">
+              <h4 className="text-red-400 mb-3 text-sm font-semibold">System Access Terminal</h4>
+              <div className="space-y-4">
+                {/* Display */}
+                <div className="p-4 bg-slate-950/50 rounded border border-slate-700/50 font-mono text-right">
+                  <div className="text-xs text-slate-500 mb-1">Enter Access Code</div>
+                  <div className="text-2xl text-slate-300 min-h-[2rem]">
+                    {enteredCode || <span className="text-slate-600">_</span>}
+                  </div>
+                </div>
+
+                {/* Keypad */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                    <button
+                      key={num}
+                      onClick={() => handleKeypadInput(num.toString())}
+                      className="px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-colors"
+                    >
+                      {num}
+                    </button>
+                  ))}
+                  <button
+                    onClick={handleKeypadClear}
+                    className="px-4 py-3 bg-red-900/50 hover:bg-red-900/70 border border-red-800/50 rounded text-red-300 text-sm transition-colors"
+                  >
+                    Clear
+                  </button>
+                  <button
+                    onClick={() => handleKeypadInput('0')}
+                    className="px-4 py-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-slate-300 font-mono text-lg transition-colors"
+                  >
+                    0
+                  </button>
+                  <button
+                    onClick={handleKeypadBackspace}
+                    className="px-4 py-3 bg-amber-900/50 hover:bg-amber-900/70 border border-amber-800/50 rounded text-amber-300 text-sm transition-colors"
+                  >
+                    ⌫
+                  </button>
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  onClick={handleKeypadSubmit}
+                  disabled={!enteredCode}
+                  className="w-full px-4 py-3 bg-green-700 hover:bg-green-600 disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed border border-green-600 rounded text-white font-semibold transition-colors"
+                >
+                  Verify Access Code
+                </button>
+              </div>
+            </div>
+
+            {/* Verification Code - Only shown when code is verified */}
+            {codeVerified && (
               <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50 opacity-50 hover:opacity-100 transition-opacity">
                 <p className="text-xs text-slate-500 font-mono">
                   Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}

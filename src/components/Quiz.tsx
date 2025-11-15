@@ -240,10 +240,11 @@ export const questions: MCQ[] = [
 
 interface QuizProps {
   onClose: () => void;
-  onAllCorrect?: () => void;
+  onAllCorrect?: (accessCode: number) => void;
+  onQuizSubmitted?: (accessCode: number, allCorrect: boolean) => void;
 }
 
-export default function Quiz({ onClose, onAllCorrect }: QuizProps) {
+export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizProps) {
   const [submitted, setSubmitted] = useState(false);
   const [answers, setAnswers] = useState<OptionLetter[]>(new Array(questions.length).fill(null));
   const [showRules, setShowRules] = useState(true);
@@ -265,9 +266,17 @@ export default function Quiz({ onClose, onAllCorrect }: QuizProps) {
 
   const handleSubmit = () => {
     setSubmitted(true);
-    // Check if all answers are correct after submission
-    if (allAnswersCorrect() && onAllCorrect) {
-      onAllCorrect();
+    const accessCode = calculateAccessCode();
+    const allCorrect = allAnswersCorrect();
+    
+    // Always notify about submission with access code
+    if (onQuizSubmitted) {
+      onQuizSubmitted(accessCode, allCorrect);
+    }
+    
+    // Also call onAllCorrect for backward compatibility
+    if (allCorrect && onAllCorrect) {
+      onAllCorrect(accessCode);
     }
   };
 
