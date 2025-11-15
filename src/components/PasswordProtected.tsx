@@ -339,7 +339,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
           {/* Hint */}
           <div className="text-center pt-4 border-t border-slate-700/50">
             <p className="text-xs text-slate-500">
-              Haven't found the password yet? Return to the Incident Report and look for clues there.
+              Haven't found the password yet? Return to the Incident Report and look for clues there. This password hidden in the report gives you an insight into what actually went wrong.
               
             </p>
           </div>

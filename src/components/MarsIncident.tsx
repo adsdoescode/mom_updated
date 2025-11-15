@@ -348,7 +348,28 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   </p>
                   <button
                     onClick={() => setShowQuiz(true)}
-                    className="mt-4 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded transition-colors"
+                    className="mt-4 submit-button"
+                    style={{
+                      padding: '12px 32px',
+                      background: '#61dafb',
+                      color: '#1e1e1e',
+                      border: 'none',
+                      borderRadius: '4px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      fontSize: '14px'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = '#4fa8c5';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 4px 12px rgba(97, 218, 251, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = '#61dafb';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
                   >
                     Open Quiz
                   </button>
