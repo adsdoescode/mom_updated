@@ -357,7 +357,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               <p className="text-xs text-slate-500 font-mono">
                 Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}
                 <span 
-                  className="text-slate-600 hover:text-green-400 cursor-pointer select-all transition-colors"
+                  className="text-slate-600 cursor-pointer select-all"
                   onClick={() => handleCopyToClipboard('METRIC2IMPERIAL', 'debug')}
                 >
                   METRIC2IMPERIAL

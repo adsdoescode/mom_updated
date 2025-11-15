@@ -27,8 +27,43 @@ export type MCQ = {
   type: 'mcq';
   question: string;
   options: [string, string, string, string];
-  answer: OptionLetter;
+  
 };
+
+// Obfuscation utility functions
+const SALT = 'MARS_ORBITER_1999_QUIZ_SECRET';
+const encodeAnswer = (questionId: number, answer: OptionLetter): string => {
+  const answerIndex = OPTION_CODE[answer] - 1; // 0-3
+  const combined = `${questionId}-${answerIndex}-${SALT}`;
+  // Simple hash-like encoding
+  let hash = 0;
+  for (let i = 0; i < combined.length; i++) {
+    const char = combined.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return btoa(String(hash)).replace(/[+/=]/g, (m) => ({ '+': '-', '/': '_', '=': '' }[m] || ''));
+};
+
+const verifyAnswer = (questionId: number, userAnswer: OptionLetter, encodedAnswer: string): boolean => {
+  return encodeAnswer(questionId, userAnswer) === encodedAnswer;
+};
+
+// Obfuscated answer keys (pre-computed encoded hashes)
+// Answers are encoded using a hash function with a salt to prevent inspection
+// The actual answers are not stored in plain text anywhere in the code
+const ANSWER_KEYS: string[] = [
+  'MTkxNTE0ODc5Ng',
+  'LTI2ODUyODEzMQ',
+  'LTE3NTA2MDUxODQ',
+  'MzYwNjg1MTg1',
+  'MjEyMTE3NTYxNw',
+  'NjM5MDk4NTY0',
+  'MTY5Nzk4OTEyMg',
+  'LTQ4NTY4NzgwNQ',
+  'MTk3NjQwMjUwMQ',
+  'LTE0ODY2NDExNzQ'
+];
 
 export const questions: MCQ[] = [
   {
@@ -40,8 +75,7 @@ export const questions: MCQ[] = [
       '3 (0, 15, 30)',
       '5 (0, 15, 30, 45, 60)',
       '2 (only start and end counted)'
-    ],
-    answer: 'A'
+    ]
   },
   {
     id: 2,
@@ -52,8 +86,7 @@ export const questions: MCQ[] = [
       '5 (postfix and prefix cancel)',
       '7 (unexpected increment)',
       '4 (original values only)'
-    ],
-    answer: 'A'
+    ]
   },
   {
     id: 3,
@@ -64,8 +97,7 @@ export const questions: MCQ[] = [
       '12 (x * 2 + 2)',
       '13 (5 * 2 + 3 = 13)',
       '15 (x * 3)'
-    ],
-    answer: 'C'
+    ]
   },
   {
     id: 4,
@@ -76,8 +108,7 @@ export const questions: MCQ[] = [
       'Apollo (moon missions)',
       'Mercury (first US orbital program)',
       'Skylab (space station)'
-    ],
-    answer: 'C'
+    ]
   },
   {
     id: 5,
@@ -88,8 +119,7 @@ export const questions: MCQ[] = [
       '5.0 (5000 / 1000)',
       '0.5 (decimal shift)',
       '50 (incorrect scale)'
-    ],
-    answer: 'B'
+    ]
   },
   {
     id: 6,
@@ -100,8 +130,7 @@ export const questions: MCQ[] = [
       'Legs',
       'Propellers',
       'Wheels'
-    ],
-    answer: 'D'
+    ]
   },
   {
     id: 7,
@@ -112,8 +141,7 @@ export const questions: MCQ[] = [
       '[4, 8, 12]',
       '[0.25, 0.5, 0.75]',
       '[2, 4, 6]'
-    ],
-    answer: 'A'
+    ]
   },
   {
     id: 8,
@@ -124,8 +152,7 @@ export const questions: MCQ[] = [
       'Mars',
       'Saturn',
       'Venus'
-    ],
-    answer: 'A'
+    ]
   },
   {
     id: 9,
@@ -136,8 +163,7 @@ export const questions: MCQ[] = [
       'Inheritance',
       'Polymorphism',
       'Abstraction'
-    ],
-    answer: 'B'
+    ]
   },
   {
     id: 10,
@@ -148,8 +174,7 @@ export const questions: MCQ[] = [
       'Venus',
       'Jupiter',
       'Mercury'
-    ],
-    answer: 'A'
+    ]
   }
 ];
 
@@ -180,7 +205,8 @@ export default function Quiz({ onClose }: QuizProps) {
   const calculateAccessCode = () => {
     let code = 0;
     questions.forEach((question, index) => {
-      if (answers[index] === question.answer) {
+      // Use obfuscated answer verification
+      if (answers[index] && verifyAnswer(question.id, answers[index], ANSWER_KEYS[index])) {
         code += OPTION_CODE[answers[index]];
       }
     });
@@ -225,7 +251,8 @@ export default function Quiz({ onClose }: QuizProps) {
                 const optionLetters: OptionLetter[] = ['A', 'B', 'C', 'D'];
                 const optionLetter = optionLetters[optionIndex];
                 const isSelected = answers[questionIndex] === optionLetter;
-                const isCorrect = optionLetter === question.answer;
+                // Use obfuscated answer verification instead of direct comparison
+                const isCorrect = submitted ? verifyAnswer(question.id, optionLetter, ANSWER_KEYS[questionIndex]) : false;
                 let className = 'option';
 
                 if (submitted) {

@@ -1,7 +1,22 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { ChevronRight, Clock, Search, Lock, Trophy } from 'lucide-react';
+import { Button } from './ui/button';
+import { ChevronRight, Clock, Search, Lock, Trophy, Play } from 'lucide-react';
 
-export function RulesPresentation() {
+interface RulesPresentationProps {
+  timerStarted: boolean;
+  timeRemaining: number;
+  timerExpired: boolean;
+  onStartTimer: () => void;
+  formatTime: (ms: number) => string;
+}
+
+export function RulesPresentation({ 
+  timerStarted, 
+  timeRemaining, 
+  timerExpired, 
+  onStartTimer, 
+  formatTime 
+}: RulesPresentationProps) {
   const rules = [
     {
       icon: Clock,
@@ -31,6 +46,82 @@ export function RulesPresentation() {
 
   return (
     <div className="space-y-6">
+      {/* Timer Card */}
+      <Card className={`border-2 ${
+        timerExpired 
+          ? 'bg-red-900/30 border-red-700/50' 
+          : timerStarted 
+            ? 'bg-amber-900/30 border-amber-700/50' 
+            : 'bg-slate-800/50 border-slate-700/50'
+      }`}>
+        <CardContent className="p-6">
+          <div className="flex flex-col items-center justify-center space-y-4">
+            <div className="flex items-center gap-3">
+              <Clock className={`w-8 h-8 ${
+                timerExpired 
+                  ? 'text-red-400' 
+                  : timerStarted 
+                    ? 'text-amber-400' 
+                    : 'text-slate-400'
+              }`} />
+              <h2 className={`text-2xl font-bold ${
+                timerExpired 
+                  ? 'text-red-400' 
+                  : timerStarted 
+                    ? 'text-slate-400' 
+                    : 'text-slate-400'
+              }`}>
+                {timerExpired 
+                  ? 'Time Expired' 
+                  : timerStarted 
+                    ? 'Time Remaining' 
+                    : 'Mission Timer'}
+              </h2>
+            </div>
+            
+            {timerStarted && !timerExpired && (
+              <div className="text-5xl font-mono font-bold text-amber-400">
+                {formatTime(timeRemaining)}
+              </div>
+            )}
+            
+            {timerExpired && (
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-mono font-bold text-red-400">00:00</div>
+                <p className="text-red-300 text-sm">Access to restricted pages has been revoked.</p>
+              </div>
+            )}
+            
+            {!timerStarted && (
+              <div className="text-center space-y-4">
+                <div className="text-3xl font-mono font-bold text-slate-400">30:00</div>
+                <p className="text-slate-400 text-sm mb-4">
+                  Click the button below to start the 30-minute countdown timer.
+                  <br />
+                  Once started, you'll gain access to the Incident Report and Classified Document pages.
+                </p>
+                <Button
+                  onClick={onStartTimer}
+                  size="lg"
+                  className="bg-red-600 hover:bg-red-700 text-white px-8 py-6 text-lg"
+                >
+                  <Play className="w-5 h-5 mr-2" />
+                  Start Mission Timer
+                </Button>
+              </div>
+            )}
+            
+            {timerStarted && !timerExpired && (
+              <div className="text-center space-y-2">
+                <p className="text-amber-300 text-sm">
+                  ⚠️ Timer is active. Access to restricted pages will be revoked when time expires.
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Title Slide */}
       <Card className="bg-gradient-to-r from-red-900/50 to-slate-800/50 border-red-900/50">
         <CardHeader className="text-center py-12">
