@@ -12,7 +12,7 @@ export const OPTION_CODE: Record<OptionLetter, number> = {
 
 export const QUIZ_RULES = `
 RULES:
-1) There are 10 MCQs. Choose A / B / C / D for each.
+1) There are 15 MCQs. Choose A / B / C / D for each.
 2) Each option has a numeric code: A = 1, B = 2, C = 3, D = 4.
 3) After selecting answers for ALL questions, press SUBMIT exactly once.
 4) On submit:
@@ -55,87 +55,114 @@ const verifyAnswer = (questionId: number, userAnswer: OptionLetter, encodedAnswe
 const ANSWER_KEYS: string[] = [
   'MTkxNTE0ODc5Ng',
   'LTI2ODUyODEzMQ',
-  'LTE3NTA2MDUxODQ',
-  'MzYwNjg1MTg1',
-  'MjEyMTE3NTYxNw',
-  'NjM5MDk4NTY0',
-  'MTY5Nzk4OTEyMg',
+  'MTg0Mjc2MjIzOA',
+  'LTM0MDkxNDY4OQ',
+  'LTE4MjI5OTE3NDI',
+  'LTYyNTAxMzEw',
+  'MjA0ODc4OTA1OQ',
   'LTQ4NTY4NzgwNQ',
-  'MTk3NjQwMjUwMQ',
-  'LTE0ODY2NDExNzQ'
+  'MTYyNTYwMjU2NA',
+  'LTExMzU4NDEyMzc',
+  'OTc1NDQ5MTMy',
+  'LTEyMDgyMjc3OTU',
+  'OTAzMDYyNTc0',
+  'LTE2MzE0MTQyOTA',
+  'ODMwNjc2MDE2'
 ];
 
 export const questions: MCQ[] = [
   {
     id: 1,
     type: 'mcq',
-    question: `What is the output of print(len([i for i in range(0, 60, 15)])) ?`,
+    question: `What is the output of print(len([i for i in range(0, 60, 15)]))?`,
     options: [
-      '4 (0, 15, 30, 45 are 4 readings)',
-      '3 (0, 15, 30)',
-      '5 (0, 15, 30, 45, 60)',
-      '2 (only start and end counted)'
+      '4',
+      '3',
+      '5',
+      '2'
     ]
   },
   {
     id: 2,
     type: 'mcq',
-    question: `What is the output of printf("%d", a++ + ++b) if int a = 2, b = 3; ?`,
+    question: `According to the mission briefing video, the failure of the spacecraft resulted from a risk in converting between which unit systems?`,
     options: [
-      '6 (2 + 4 = 6)',
-      '5 (postfix and prefix cancel)',
-      '7 (unexpected increment)',
-      '4 (original values only)'
+      'Metric to Imperial',
+      'Imperial to Metric',
+      'Metric to Standard',
+      'Standard to Imperial'
     ]
   },
   {
     id: 3,
     type: 'mcq',
-    question: `What is the output of System.out.println(x * 2 + 3) if int x = 5; ?`,
+    question: `What value is printed by printf("%d", a++ + ++b) if int a = 2, b = 3;?`,
     options: [
-      '10 (x * 2)',
-      '12 (x * 2 + 2)',
-      '13 (5 * 2 + 3 = 13)',
-      '15 (x * 3)'
+      '6',
+      '5',
+      '7',
+      '4'
     ]
   },
   {
     id: 4,
     type: 'mcq',
-    question: `What was the first U.S. space program to send an astronaut to orbit the Earth?`,
+    question: `In the official mission dossier, the mass of the spacecraft is listed at approximately:`,
     options: [
-      'Gemini (later 2-astronaut missions)',
-      'Apollo (moon missions)',
-      'Mercury (first US orbital program)',
-      'Skylab (space station)'
+      '638 kg',
+      '980 kg',
+      '768 kg',
+      '1120 kg'
     ]
   },
   {
     id: 5,
     type: 'mcq',
-    question: `What is the output of cout << meters / 1000.0 if double meters = 5000; ?`,
+    question: `What is printed by System.out.println(x * 2 + 3) when int x = 5?`,
     options: [
-      '5000 (no division)',
-      '5.0 (5000 / 1000)',
-      '0.5 (decimal shift)',
-      '50 (incorrect scale)'
+      '10',
+      '12',
+      '13',
+      '15'
     ]
   },
   {
     id: 6,
     type: 'mcq',
-    question: `The Curiosity and Perseverance Mars rovers primarily use six of which component for mobility?`,
+    question: `The publicly released cost figure for the mission is approximately:`,
     options: [
-      'Tracks',
-      'Legs',
-      'Propellers',
-      'Wheels'
+      '$672 million',
+      '$327.6 million',
+      '$450 million',
+      '$210 million'
     ]
   },
   {
     id: 7,
     type: 'mcq',
-    question: `What is the output of console.log(data.map(x => x/4)) if let data = [4, 8, 12]; ?`,
+    question: `What is the result of cout << meters / 1000.0 when double meters = 5000?`,
+    options: [
+      '5000',
+      '5.0',
+      '0.5',
+      '50'
+    ]
+  },
+  {
+    id: 8,
+    type: 'mcq',
+    question: `The incident report indicates that the spacecraft entered Mars' atmosphere at approximately what altitude?`,
+    options: [
+      '~57 km',
+      '~100 km',
+      '~140 km',
+      '~200 km'
+    ]
+  },
+  {
+    id: 9,
+    type: 'mcq',
+    question: `What is the output of [4, 8, 12].map(x => x / 4)?`,
     options: [
       '[1, 2, 3]',
       '[4, 8, 12]',
@@ -144,36 +171,69 @@ export const questions: MCQ[] = [
     ]
   },
   {
-    id: 8,
-    type: 'mcq',
-    question: `Which planet is the focus of NASA's Juno mission?`,
-    options: [
-      'Jupiter',
-      'Mars',
-      'Saturn',
-      'Venus'
-    ]
-  },
-  {
-    id: 9,
-    type: 'mcq',
-    question: `In Object Oriented Programming, the concept where one class can inherit features from another is called:`,
-    options: [
-      'Encapsulation',
-      'Inheritance',
-      'Polymorphism',
-      'Abstraction'
-    ]
-  },
-  {
     id: 10,
     type: 'mcq',
-    question: `Which planet is commonly referred to as the "Red Planet"?`,
+    question: `The official analysis cites the root cause as a mismatch between:`,
     options: [
-      'Mars',
-      'Venus',
-      'Jupiter',
-      'Mercury'
+      'Temperature units vs. pressure units',
+      'Metric units (Newtons) vs. Imperial units (pound-force)',
+      'Time units (seconds vs. minutes)',
+      'Distance units (meters vs. feet)'
+    ]
+  },
+  {
+    id: 11,
+    type: 'mcq',
+    question: `The mission documentation lists the propulsion type used as:`,
+    options: [
+      'Ion thrusters',
+      'Hydrazine',
+      'Chemical methane/oxygen',
+      'Solar‐electric plasma'
+    ]
+  },
+  {
+    id: 12,
+    type: 'mcq',
+    question: `From launch to loss of contact, the mission lasted approximately:`,
+    options: [
+      'A few weeks',
+      '~9 months',
+      '~3 years',
+      '~2 months'
+    ]
+  },
+  {
+    id: 13,
+    type: 'mcq',
+    question: `In the investigation notes, which phrase is used to describe how the unit mismatch manifested over time?`,
+    options: [
+      '"Software synchronization mismatch"',
+      '"Cumulative navigation error"',
+      '"Atmospheric density deviation"',
+      '"Trajectory oscillation drift"'
+    ]
+  },
+  {
+    id: 14,
+    type: 'mcq',
+    question: `The mission briefing video thumbnail features a ruler graphic. Which annotation is shown near the ruler to emphasise the measurement systems?`,
+    options: [
+      '"standard units"',
+      '"imperial units"',
+      '"metric units"',
+      '"system units"'
+    ]
+  },
+  {
+    id: 15,
+    type: 'mcq',
+    question: `In the technical parameter card, what term is used to denote the officially planned orbit altitude range?`,
+    options: [
+      '"Flight corridor: 110–120 km"',
+      '"Planned Altitude: 140–150 km"',
+      '"Target Height: 90–100 km"',
+      '"Design Orbit: 160–170 km"'
     ]
   }
 ];
