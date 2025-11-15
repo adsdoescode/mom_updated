@@ -240,9 +240,10 @@ export const questions: MCQ[] = [
 
 interface QuizProps {
   onClose: () => void;
+  onAllCorrect?: () => void;
 }
 
-export default function Quiz({ onClose }: QuizProps) {
+export default function Quiz({ onClose, onAllCorrect }: QuizProps) {
   const [submitted, setSubmitted] = useState(false);
   const [answers, setAnswers] = useState<OptionLetter[]>(new Array(questions.length).fill(null));
   const [showRules, setShowRules] = useState(true);
@@ -256,8 +257,18 @@ export default function Quiz({ onClose }: QuizProps) {
     }
   };
 
+  const allAnswersCorrect = () => {
+    return questions.every((question, index) => {
+      return answers[index] !== null && verifyAnswer(question.id, answers[index], ANSWER_KEYS[index]);
+    });
+  };
+
   const handleSubmit = () => {
     setSubmitted(true);
+    // Check if all answers are correct after submission
+    if (allAnswersCorrect() && onAllCorrect) {
+      onAllCorrect();
+    }
   };
 
   const allAnswered = answers.every(answer => answer !== null);

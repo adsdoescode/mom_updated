@@ -13,6 +13,7 @@ interface MarsIncidentProps {
 export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
   const [clickedElements, setClickedElements] = useState<string[]>([]);
   const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompletedCorrectly, setQuizCompletedCorrectly] = useState(false);
 
   const handleHiddenClick = (element: string, password: string) => {
     if (!clickedElements.includes(element)) {
@@ -56,7 +57,10 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
   };
 
   if (showQuiz) {
-    return <Quiz onClose={() => setShowQuiz(false)} />;
+    return <Quiz 
+      onClose={() => setShowQuiz(false)} 
+      onAllCorrect={() => setQuizCompletedCorrectly(true)}
+    />;
   }
 
   return (
@@ -353,18 +357,20 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
             </div>
 
             {/* Secret password element - appears as a random data point */}
-            <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50 opacity-50 hover:opacity-100 transition-opacity">
-              <p className="text-xs text-slate-500 font-mono">
-                Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}
-                <span 
-                  className="text-slate-600 cursor-pointer select-all"
-                  onClick={() => handleCopyToClipboard('METRIC2IMPERIAL', 'debug')}
-                >
-                  METRIC2IMPERIAL
-                </span>
-                {' '}| Status: Archived
-              </p>
-            </div>
+            {quizCompletedCorrectly && (
+              <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50 opacity-50 hover:opacity-100 transition-opacity">
+                <p className="text-xs text-slate-500 font-mono">
+                  Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}
+                  <span 
+                    className="text-slate-600 cursor-pointer select-all"
+                    onClick={() => handleCopyToClipboard('METRIC2IMPERIAL', 'debug')}
+                  >
+                    METRIC2IMPERIAL
+                  </span>
+                  {' '}| Status: Archived
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
