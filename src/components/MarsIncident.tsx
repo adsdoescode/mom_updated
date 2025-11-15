@@ -373,9 +373,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
       <Card className="bg-blue-900/20 border-blue-700/50">
         <CardContent className="p-4">
           <p className="text-sm text-blue-300">
-            💡 <span className="text-blue-400">Investigator's Tip:</span> Look for clickable 
-            elements, hover over suspicious text, and examine technical data carefully. 
-            The password relates to the root cause of the failure.
+            💡 <span className="text-blue-400">Investigator's Tip:</span> Certain elements within the report may respond differently upon closer examination. Small irregularities can offer meaningful insight.
           </p>
         </CardContent>
       </Card>

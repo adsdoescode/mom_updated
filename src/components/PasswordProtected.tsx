@@ -304,7 +304,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                 placeholder="Enter access code..."
                 value={password}
                 onChange={(e) => setPassword(e.target.value.toUpperCase())}
-                className="text-center text-lg tracking-wider bg-slate-900/50 border-slate-700 focus:border-red-500"
+                className="text-center text-lg tracking-wider bg-slate-900/50 border-slate-700 focus:border-red-500 text-white placeholder:text-slate-500"
                 autoComplete="off"
               />
               {discoveredPassword && !isUnlocked && (
@@ -339,8 +339,8 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
           {/* Hint */}
           <div className="text-center pt-4 border-t border-slate-700/50">
             <p className="text-xs text-slate-500">
-              Haven't found the password yet? Return to the Incident Report and look for 
-              clickable elements, hover hints, and technical data.
+              Haven't found the password yet? Return to the Incident Report and look for clues there.
+              
             </p>
           </div>
         </div>
