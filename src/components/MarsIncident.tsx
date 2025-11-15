@@ -1,4 +1,4 @@
-import REact, { useState } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { ImageWithFallback } from './figma/ImageWithFallback';
@@ -18,12 +18,40 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     if (!clickedElements.includes(element)) {
       setClickedElements([...clickedElements, element]);
       onPasswordFound(password);
+    }
+  };
+
+  const handleCopyToClipboard = async (text: string, element: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      handleHiddenClick(element, text);
       // Show a subtle notification
       const notification = document.createElement('div');
-      notification.textContent = '✓ Access code discovered';
+      notification.textContent = '✓ Access code discovered and copied to clipboard';
       notification.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
       document.body.appendChild(notification);
       setTimeout(() => notification.remove(), 3000);
+    } catch (err) {
+      console.error('Failed to copy to clipboard:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        handleHiddenClick(element, text);
+        const notification = document.createElement('div');
+        notification.textContent = '✓ Access code discovered and copied to clipboard';
+        notification.className = 'fixed bottom-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed:', fallbackErr);
+      }
+      document.body.removeChild(textArea);
     }
   };
 
@@ -330,7 +358,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                 Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}
                 <span 
                   className="text-slate-600 hover:text-green-400 cursor-pointer select-all transition-colors"
-                  onClick={() => handleHiddenClick('debug', 'METRIC2IMPERIAL')}
+                  onClick={() => handleCopyToClipboard('METRIC2IMPERIAL', 'debug')}
                 >
                   METRIC2IMPERIAL
                 </span>
