@@ -18,6 +18,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
   const [correctAccessCode, setCorrectAccessCode] = useState<number | null>(null);
   const [enteredCode, setEnteredCode] = useState<string>('');
   const [codeVerified, setCodeVerified] = useState(false);
+  const [quizAttemptCount, setQuizAttemptCount] = useState(0);
 
   const handleHiddenClick = (element: string, password: string) => {
     if (!clickedElements.includes(element)) {
@@ -80,7 +81,9 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     if (correctAccessCode === null) {
       // Quiz not completed correctly yet
       const notification = document.createElement('div');
-      notification.textContent = '✗ Complete the quiz first';
+      notification.textContent = quizAttemptCount === 0 
+        ? '✗ Please complete the quiz first'
+        : '✗ Please enter valid access code';
       notification.className = 'fixed bottom-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
       document.body.appendChild(notification);
       setTimeout(() => notification.remove(), 2000);
@@ -90,7 +93,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     const entered = parseInt(enteredCode, 10);
     if (isNaN(entered)) {
       const notification = document.createElement('div');
-      notification.textContent = '✗ Please enter a valid access code';
+      notification.textContent = '✗ Please enter valid access code';
       notification.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
       document.body.appendChild(notification);
       setTimeout(() => notification.remove(), 2000);
@@ -119,6 +122,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
         setCorrectAccessCode(accessCode);
       }}
       onQuizSubmitted={(accessCode, allCorrect) => {
+        setQuizAttemptCount(prev => prev + 1);
         if (allCorrect) {
           setQuizCompletedCorrectly(true);
           setCorrectAccessCode(accessCode);
