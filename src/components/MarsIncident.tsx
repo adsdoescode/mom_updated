@@ -80,7 +80,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     if (correctAccessCode === null) {
       // Quiz not completed correctly yet
       const notification = document.createElement('div');
-      notification.textContent = '✗ Complete the quiz with all correct answers first';
+      notification.textContent = '✗ Complete the quiz first';
       notification.className = 'fixed bottom-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
       document.body.appendChild(notification);
       setTimeout(() => notification.remove(), 2000);
@@ -412,7 +412,9 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   </p>
                   <button
                     onClick={() => setShowQuiz(true)}
-                    className="submit-button mt-4"
+                    disabled={codeVerified || quizCompletedCorrectly}
+                    aria-disabled={codeVerified || quizCompletedCorrectly}
+                    className={`submit-button mt-4 ${(codeVerified || quizCompletedCorrectly) ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
                   >
                     Open Quiz
                   </button>
