@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RiddleRound } from './components/RiddleRound';
 import { CodeExecutor } from './components/CodeExecutor';
 import { MapReveal } from './components/MapReveal';
@@ -9,6 +9,43 @@ export default function App() {
   const [currentStage, setCurrentStage] = useState<'riddles' | 'code' | 'map' | 'password' | 'round3'>('riddles');
   const [riddleAnswers, setRiddleAnswers] = useState({ a: 0, b: 0, c: 0 });
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+
+  // Check for session access on mount
+  useEffect(() => {
+    const accessGranted = sessionStorage.getItem('round2_access_granted') === 'true';
+    setHasAccess(accessGranted);
+    
+    if (!accessGranted) {
+      // Clear any stale data
+      sessionStorage.removeItem('round2_access_granted');
+    }
+  }, []);
+
+  // Show error if access not granted
+  if (hasAccess === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 flex items-center justify-center">
+        <div className="container mx-auto px-4 py-8 max-w-4xl text-center">
+          <div className="bg-slate-800/90 backdrop-blur rounded-lg p-12 border-2 border-red-600 shadow-2xl">
+            <h1 className="text-red-500 text-4xl font-bold mb-4">ERROR 404</h1>
+            <p className="text-red-400 text-2xl mb-2">Site not found</p>
+            <p className="text-slate-300 text-lg">Solve round 1 first you sneaky cheater</p>
+            <div className="mt-8 text-6xl">🚫</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading while checking access
+  if (hasAccess === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
+        <div className="text-slate-300">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">

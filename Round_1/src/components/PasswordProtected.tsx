@@ -226,7 +226,11 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Access the Round 2 Investigation Platform:</p>
                     <button 
-                      onClick={() => window.location.href = '/round2'}
+                      onClick={() => {
+                        // Set session access token before navigating
+                        sessionStorage.setItem('round2_access_granted', 'true');
+                        window.location.href = '/round2';
+                      }}
                       className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm cursor-pointer"
                     >
                       Open Round 2 Website
