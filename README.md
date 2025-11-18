@@ -7,5 +7,6 @@
 
   Run `npm install` to install the dependencies.
 
-  Run `npm run dev` to start the development server.
+  Run `npm run build:r1` and `npm run build:r2`
+  Run `npm start` to run the server
   
