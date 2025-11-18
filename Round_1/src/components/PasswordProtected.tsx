@@ -225,18 +225,13 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm">1</span>
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Access the Round 2 Investigation Platform:</p>
-                    <a 
-                      href="#round2" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+                    <button 
+                      onClick={() => window.location.href = '/round2'}
+                      className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm cursor-pointer"
                     >
                       Open Round 2 Website
                       <span>→</span>
-                    </a>
-                    <p className="text-xs text-slate-500 mt-2 italic">
-                      Replace '#round2' with your Round 2 website URL
-                    </p>
+                    </button>
                   </div>
                 </div>
 
@@ -245,17 +240,13 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Download the Investigation Files:</p>
                     <a 
-                      href="#folder" 
-                      target="_blank" 
-                      rel="noopener noreferrer"
+                      href="/download/mission-document" 
+                      download="Mission_Critical_Document.docx"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
                     >
                       <FileText className="w-4 h-4" />
                       Access Mission Files Folder
                     </a>
-                    <p className="text-xs text-slate-500 mt-2 italic">
-                      Replace '#folder' with your Google Drive folder link
-                    </p>
                   </div>
                 </div>
               </div>
@@ -263,8 +254,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
 
             <div className="p-4 bg-amber-900/20 rounded-lg border border-amber-700/30">
               <p className="text-amber-200 text-sm">
-                ⚠️ <strong>Important:</strong> Keep this window open for reference. You may need 
-                information from Round 1 to complete Round 2 challenges.
+                ⚠️ <strong>Important:</strong> You can access the contents of Round 1 through the Investigation Files Document. Keep this folder safe - you might need it in the future.
               </p>
             </div>
           </CardContent>
