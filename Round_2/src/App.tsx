@@ -15,7 +15,7 @@ export default function App() {
   useEffect(() => {
     const accessGranted = sessionStorage.getItem('round2_access_granted') === 'true';
     setHasAccess(accessGranted);
-    
+
     if (!accessGranted) {
       // Clear any stale data
       sessionStorage.removeItem('round2_access_granted');
@@ -25,14 +25,96 @@ export default function App() {
   // Show error if access not granted
   if (hasAccess === false) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 flex items-center justify-center">
-        <div className="container mx-auto px-4 py-8 max-w-4xl text-center">
-          <div className="bg-slate-800/90 backdrop-blur rounded-lg p-12 border-2 border-red-600 shadow-2xl">
-            <h1 className="text-red-500 text-4xl font-bold mb-4">ERROR 404</h1>
-            <p className="text-red-400 text-2xl mb-2">Site not found</p>
-            <p className="text-slate-300 text-lg">Solve round 1 first you sneaky cheater</p>
-            <div className="mt-8 text-6xl">🚫</div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex items-center justify-center p-4">
+        <div className="relative max-w-2xl w-full">
+          {/* Animated background glow - using multiple layers for better color */}
+          <div className="absolute inset-0 rounded-2xl animate-pulse" 
+               style={{ 
+                 boxShadow: '0 0 80px 40px rgba(168, 85, 247, 0.4), 0 0 120px 60px rgba(245, 158, 11, 0.3)',
+                 background: 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.15) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(168, 85, 247, 0.15) 100%)'
+               }} 
+          />
+          
+          {/* Main card */}
+          <div className="relative bg-slate-900/90 backdrop-blur-2xl rounded-2xl border border-purple-500/30 shadow-2xl overflow-hidden">
+            {/* Top accent bar */}
+            <div className="h-1 bg-gradient-to-r from-purple-600 via-amber-500 to-purple-600 animate-pulse" />
+            
+            <div className="px-8 py-12 sm:px-12 sm:py-16">
+              {/* Lock icon with animation */}
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl animate-pulse" />
+                  <div className="relative bg-gradient-to-br from-purple-600 to-amber-600 p-6 rounded-full">
+                    <svg 
+                      className="w-16 h-16 text-white animate-pulse" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round" 
+                        strokeWidth={2} 
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" 
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-4xl sm:text-5xl font-bold text-center mb-4">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-amber-400 to-purple-400 animate-pulse">
+                  ACCESS DENIED
+                </span>
+              </h1>
+
+              {/* Subtitle */}
+              <div className="text-center mb-6">
+                <p className="text-amber-400 text-xl font-semibold mb-2 tracking-wide">
+                  🔒 CLEARANCE LEVEL INSUFFICIENT
+                </p>
+                <div className="inline-block bg-red-500/10 border border-red-500/30 rounded-lg px-4 py-2">
+                  <p className="text-red-400 font-mono text-sm">
+                    ERROR CODE: R2_UNAUTHORIZED
+                  </p>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="bg-slate-800/50 rounded-xl p-6 border border-purple-500/20 mb-6">
+                <p className="text-slate-300 text-center text-lg leading-relaxed">
+                  This area is <span className="text-amber-400 font-semibold">restricted</span> to authorized personnel only.
+                  <br />
+                  <span className="text-purple-400">Complete Round 1</span> to gain access credentials.
+                </p>
+              </div>
+
+              {/* Fun message */}
+              <div className="text-center">
+                <p className="text-slate-400 text-sm mb-4">
+                  Nice try, you sneaky lil thing... but you'll need to solve the first mission first! 🕵️
+                </p>
+                
+                {/* Animated warning stripes */}
+                <div className="flex justify-center gap-2 opacity-50">
+                  <div className="w-8 h-1 bg-amber-500 animate-pulse" style={{ animationDelay: '0ms' }} />
+                  <div className="w-8 h-1 bg-amber-500 animate-pulse" style={{ animationDelay: '150ms' }} />
+                  <div className="w-8 h-1 bg-amber-500 animate-pulse" style={{ animationDelay: '300ms' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom accent bar */}
+            <div className="h-1 bg-gradient-to-r from-purple-600 via-amber-500 to-purple-600 animate-pulse" />
           </div>
+
+          {/* Corner decorations */}
+          <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-purple-500/50 rounded-tl-lg" />
+          <div className="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-purple-500/50 rounded-tr-lg" />
+          <div className="absolute -bottom-4 -left-4 w-8 h-8 border-b-2 border-l-2 border-amber-500/50 rounded-bl-lg" />
+          <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-amber-500/50 rounded-br-lg" />
         </div>
       </div>
     );
@@ -42,7 +124,7 @@ export default function App() {
   if (hasAccess === null) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-slate-300">Loading...</div>
+        <div className="text-slate-300 text-xl font-semibold">Loading...</div>
       </div>
     );
   }
@@ -52,8 +134,12 @@ export default function App() {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-amber-400 mb-2">🔐 COORDINATE CIPHER CHALLENGE</h1>
-          <p className="text-slate-300">Solve the riddles • Execute the code • Find the location • Unlock Round 3</p>
+          <h1 className="text-amber-400 text-3xl font-bold mb-2">
+            🔐 COORDINATE CIPHER CHALLENGE
+          </h1>
+          <p className="text-slate-300">
+            Solve the riddles • Execute the code • Find the location • Unlock Round 3
+          </p>
         </div>
 
         {/* Progress Indicator */}
