@@ -4,9 +4,10 @@ import { CodeExecutor } from './components/CodeExecutor';
 import { MapReveal } from './components/MapReveal';
 import { PasswordEntry } from './components/PasswordEntry';
 import { RoundThree } from './components/RoundThree';
+import { SlidingPuzzle } from './components/SlidingPuzzle';
 
 export default function App() {
-  const [currentStage, setCurrentStage] = useState<'riddles' | 'code' | 'map' | 'password' | 'round3'>('riddles');
+  const [currentStage, setCurrentStage] = useState<'puzzle' | 'riddles' | 'code' | 'map' | 'password' | 'round3'>('puzzle');
   const [riddleAnswers, setRiddleAnswers] = useState({ a: 0, b: 0, c: 0 });
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
@@ -28,35 +29,35 @@ export default function App() {
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950 flex items-center justify-center p-4">
         <div className="relative max-w-2xl w-full">
           {/* Animated background glow - using multiple layers for better color */}
-          <div className="absolute inset-0 rounded-2xl animate-pulse" 
-               style={{ 
-                 boxShadow: '0 0 80px 40px rgba(168, 85, 247, 0.4), 0 0 120px 60px rgba(245, 158, 11, 0.3)',
-                 background: 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.15) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(168, 85, 247, 0.15) 100%)'
-               }} 
+          <div className="absolute inset-0 rounded-2xl animate-pulse"
+            style={{
+              boxShadow: '0 0 80px 40px rgba(168, 85, 247, 0.4), 0 0 120px 60px rgba(245, 158, 11, 0.3)',
+              background: 'radial-gradient(ellipse at center, rgba(168, 85, 247, 0.15) 0%, rgba(245, 158, 11, 0.15) 50%, rgba(168, 85, 247, 0.15) 100%)'
+            }}
           />
-          
+
           {/* Main card */}
           <div className="relative bg-slate-900/90 backdrop-blur-2xl rounded-2xl border border-purple-500/30 shadow-2xl overflow-hidden">
             {/* Top accent bar */}
             <div className="h-1 bg-gradient-to-r from-purple-600 via-amber-500 to-purple-600 animate-pulse" />
-            
+
             <div className="px-8 py-12 sm:px-12 sm:py-16">
               {/* Lock icon with animation */}
               <div className="flex justify-center mb-6">
                 <div className="relative">
                   <div className="absolute inset-0 bg-amber-500/20 rounded-full blur-xl animate-pulse" />
                   <div className="relative bg-gradient-to-br from-purple-600 to-amber-600 p-6 rounded-full">
-                    <svg 
-                      className="w-16 h-16 text-white animate-pulse" 
-                      fill="none" 
-                      stroke="currentColor" 
+                    <svg
+                      className="w-16 h-16 text-white animate-pulse"
+                      fill="none"
+                      stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth={2} 
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
                     </svg>
                   </div>
@@ -96,7 +97,7 @@ export default function App() {
                 <p className="text-slate-400 text-sm mb-4">
                   Nice try, you sneaky lil thing... but you'll need to solve the first mission first! 🕵️
                 </p>
-                
+
                 {/* Animated warning stripes */}
                 <div className="flex justify-center gap-2 opacity-50">
                   <div className="w-8 h-1 bg-amber-500 animate-pulse" style={{ animationDelay: '0ms' }} />
@@ -131,7 +132,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className={`container mx-auto px-4 py-8 ${currentStage === 'puzzle' ? 'max-w-7xl' : 'max-w-4xl'}`}>
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-amber-400 text-3xl font-bold mb-2">
@@ -144,22 +145,27 @@ export default function App() {
 
         {/* Progress Indicator */}
         <div className="flex justify-center gap-2 mb-8">
-          {['riddles', 'code', 'map', 'password', 'round3'].map((stage, idx) => (
+          {['puzzle', 'riddles', 'code', 'map', 'password', 'round3'].map((stage, idx) => (
             <div
               key={stage}
-              className={`h-2 w-16 rounded-full transition-all ${
-                currentStage === stage
+              className={`h-2 w-16 rounded-full transition-all ${currentStage === stage
                   ? 'bg-amber-400'
-                  : ['riddles', 'code', 'map', 'password', 'round3'].indexOf(currentStage) > idx
-                  ? 'bg-green-500'
-                  : 'bg-slate-700'
-              }`}
+                  : ['puzzle', 'riddles', 'code', 'map', 'password', 'round3'].indexOf(currentStage) > idx
+                    ? 'bg-green-500'
+                    : 'bg-slate-700'
+                }`}
             />
           ))}
         </div>
 
         {/* Main Content */}
         <div className="bg-slate-800/50 backdrop-blur rounded-lg p-8 border border-slate-700 shadow-2xl">
+          {currentStage === 'puzzle' && (
+            <SlidingPuzzle
+              onComplete={() => setCurrentStage('riddles')}
+            />
+          )}
+
           {currentStage === 'riddles' && (
             <RiddleRound
               onComplete={(answers) => {
