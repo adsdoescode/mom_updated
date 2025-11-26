@@ -8,10 +8,10 @@ interface RiddleRoundProps {
   onComplete: (answers: { a: number; b: number; c: number }) => void;
 }
 
-export function RiddleRound({ onComplete }: RiddleRoundProps) {
-  const [answer1, setAnswer1] = useState('');
-  const [answer2, setAnswer2] = useState('');
-  const [answer3, setAnswer3] = useState('');
+export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProps & { isCompleted?: boolean }) {
+  const [answer1, setAnswer1] = useState(isCompleted ? '286083' : '');
+  const [answer2, setAnswer2] = useState(isCompleted ? '80' : '');
+  const [answer3, setAnswer3] = useState(isCompleted ? '6042' : '');
 
   const correctAnswers = {
     a: 286083,
@@ -37,10 +37,7 @@ export function RiddleRound({ onComplete }: RiddleRoundProps) {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-6">
-        <h2 className="text-amber-400 mb-2">Round 1: The Coordinate Riddles</h2>
-        <p className="text-slate-300">Solve these riddles to obtain the coordinate seeds</p>
-      </div>
+
 
       {/* Riddle 1 - Latitude */}
       <Card className="bg-slate-900/50 border-slate-600">
@@ -143,7 +140,7 @@ export function RiddleRound({ onComplete }: RiddleRoundProps) {
           className="bg-amber-500 hover:bg-amber-600 text-slate-900"
           size="lg"
         >
-          {allCorrect ? '🚀 Proceed to Code Execution' : '🔒 Solve All Riddles to Continue'}
+          {allCorrect ? 'Proceed to Code Execution' : '🔒 Solve All Riddles to Continue'}
         </Button>
       </div>
     </div>

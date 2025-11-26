@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Play, Terminal, AlertCircle, CheckCircle2, RotateCcw } from 'lucide-react';
@@ -105,11 +105,11 @@ int main() {
 }`;
 };
 
-export function CodeExecutor({ answers, onExecute }: CodeExecutorProps) {
-  const [code, setCode] = useState(getBuggyCode(answers));
+export function CodeExecutor({ answers, onExecute, isCompleted = false }: CodeExecutorProps & { isCompleted?: boolean }) {
+  const [code, setCode] = useState(isCompleted ? getBuggyCode(answers).replace('int sum;', 'int sum = 0;').replace('while (value >= 0)', 'while (value > 0)').replace('if (actual = expected_checksum)', 'if (actual == expected_checksum)').replace('(seed_a % 10000) / 10000', '(seed_a % 10000) / 10000.0').replace('seed_c / 10000', 'seed_c / 10000.0').replace('-(lon_degrees + lon_minutes)', '-1 * (lon_degrees + lon_minutes)').replace('int seed_c =', `int seed_c = ${answers.c};`).replace('printf("SEED_A checksum: %f', 'printf("SEED_A checksum: %d') : getBuggyCode(answers));
   const [output, setOutput] = useState('');
-  const [hasExecuted, setHasExecuted] = useState(false);
-  const [isCorrect, setIsCorrect] = useState(false);
+  const [hasExecuted, setHasExecuted] = useState(isCompleted);
+  const [isCorrect, setIsCorrect] = useState(isCompleted);
   const [errorMessage, setErrorMessage] = useState('');
   const [bugsFound, setBugsFound] = useState<string[]>([]);
 
@@ -278,12 +278,56 @@ Coordinates locked for Mars mission
     setBugsFound([]);
   };
 
+  useEffect(() => {
+    if (isCompleted) {
+      // Simulate successful execution output
+      const latFloat = answers.a / 10000.0;
+      const lonFloat = -(answers.b + answers.c / 10000.0);
+      const checksum_a = String(answers.a).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+      const checksum_b = String(answers.b).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+      const checksum_c = String(answers.c).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+      const equatorDistance = Math.abs(latFloat) * 111.32;
+
+      const executionOutput = `gcc -o mars_nav mars_locator.c -lm
+./mars_nav
+
+=== MARS MISSION NAVIGATION SYSTEM ===
+Initializing coordinate decoder...
+
+Verifying mission seeds...
+SEED_A checksum: ${checksum_a}
+SEED_B checksum: ${checksum_b}
+SEED_C checksum: ${checksum_c}
+
+Decoding coordinates...
+
+--- DECODED COORDINATES ---
+Latitude:  ${latFloat.toFixed(4)}°
+Longitude: ${lonFloat.toFixed(4)}°
+
+Mission Target: [${latFloat.toFixed(4)}, ${lonFloat.toFixed(4)}]
+
+--- COORDINATE VALIDATION ---
+✓ Latitude valid (Northern Hemisphere)
+✓ Longitude valid (Western Hemisphere)
+
+Distance from Equator: ${equatorDistance.toFixed(2)} km
+
+=== NAVIGATION SYSTEM READY ===
+Coordinates locked for Mars mission
+
+✓ All systems operational
+✓ Coordinates decoded with full precision
+✓ Ready for mission deployment`;
+      setOutput(executionOutput);
+    }
+  }, [isCompleted, answers]);
+
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h2 className="text-amber-400 mb-2 text-2xl font-bold">Round 2: Debug the Navigation System</h2>
+        <h2 className="text-amber-400 mb-2 text-2xl font-bold">Debug the Navigation System</h2>
         <p className="text-slate-300">Fix the bugs in the Mars Mission coordinate decoder</p>
-        <p className="text-slate-400 text-sm mt-1">The code has 3 critical bugs that cause precision loss</p>
       </div>
 
       {/* Code Editor Card */}
@@ -314,7 +358,7 @@ Coordinates locked for Mars mission
           <div className="mt-4 flex gap-3">
             <Button
               onClick={handleExecute}
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold"
+              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold shadow-lg shadow-amber-900/20"
               size="lg"
             >
               <Play className="w-5 h-5 mr-2" />

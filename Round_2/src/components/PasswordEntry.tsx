@@ -2,14 +2,15 @@ import { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Lock, Unlock, AlertCircle } from 'lucide-react';
+import { Lock, Unlock, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface PasswordEntryProps {
   onCorrectPassword: () => void;
+  isCompleted?: boolean;
 }
 
-export function PasswordEntry({ onCorrectPassword }: PasswordEntryProps) {
-  const [password, setPassword] = useState('');
+export function PasswordEntry({ onCorrectPassword, isCompleted = false }: PasswordEntryProps) {
+  const [password, setPassword] = useState(isCompleted ? 'KSC' : '');
   const [attempts, setAttempts] = useState(0);
   const [error, setError] = useState('');
 
@@ -51,7 +52,7 @@ export function PasswordEntry({ onCorrectPassword }: PasswordEntryProps) {
             <p className="text-slate-300 text-center mb-4">
               What is the three-letter acronym for the space center at coordinates <span className="text-green-400 font-mono">[28.6083, -80.6042]</span>?
             </p>
-            
+
             <div className="flex gap-2">
               <Input
                 type="text"
@@ -64,9 +65,10 @@ export function PasswordEntry({ onCorrectPassword }: PasswordEntryProps) {
               />
               <Button
                 onClick={handleSubmit}
-                className="bg-green-500 hover:bg-green-600 text-white"
+                className={`bg-green-500 hover:bg-green-600 text-white ${isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isCompleted}
               >
-                <Unlock className="w-5 h-5" />
+                {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <Unlock className="w-5 h-5" />}
               </Button>
             </div>
 
@@ -81,11 +83,7 @@ export function PasswordEntry({ onCorrectPassword }: PasswordEntryProps) {
             )}
           </div>
 
-          <div className="bg-blue-950/30 p-4 rounded border border-blue-500/30">
-            <p className="text-blue-300 text-sm text-center">
-              💡 Hint: Famous NASA launch facility in Florida (3 letters)
-            </p>
-          </div>
+
         </CardContent>
       </Card>
     </div>
