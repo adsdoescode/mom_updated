@@ -17,8 +17,8 @@ const getBuggyCode = (answers: { a: number; b: number; c: number }) => {
 // Decode coordinates from mission seeds
 
 int calculate_checksum(int value) {
-    int sum = 0;
-    while (value > 0) {
+    int sum;
+    while (value >= 0) {
         sum = sum + value % 10;
         value = value / 10;
     }
@@ -45,7 +45,7 @@ double decode_longitude(int seed_b, int seed_c) {
     // Longitude is negative (West)
     int lon_degrees = seed_b;
     double lon_minutes = seed_c / 10000;
-    double longitude = -(lon_degrees + lon_minutes);
+    double longitude = lon_degrees + lon_minutes;
     return longitude;
 }
 
@@ -53,7 +53,7 @@ int main() {
     // Mission seeds from riddles
     int seed_a = ${answers.a};
     int seed_b = ${answers.b};
-    int seed_c = ${answers.c};
+    int seed_c = ${answers.c}
     
     printf("=== MARS MISSION NAVIGATION SYSTEM ===\\n");
     printf("Initializing coordinate decoder...\\n\\n");
@@ -64,9 +64,9 @@ int main() {
     int checksum_b = calculate_checksum(seed_b);
     int checksum_c = calculate_checksum(seed_c);
     
-    printf("SEED_A checksum: %d\\n", checksum_a);
-    printf("SEED_B checksum: %d\\n", checksum_b);
-    printf("SEED_C checksum: %d\\n", checksum_c);
+    printf("SEED_A checksum: %f\\n", checksum_a);
+    printf("SEED_B checksum: %f\\n", checksum_b);
+    printf("SEED_C checksum: %f\\n", checksum_c);
     
     // Decode coordinates
     printf("\\nDecoding coordinates...\\n");
@@ -116,19 +116,44 @@ export function CodeExecutor({ answers, onExecute }: CodeExecutorProps) {
   const checkCode = (userCode: string): { correct: boolean; bugs: string[] } => {
     const foundBugs: string[] = [];
 
-    // Bug 1: Assignment instead of comparison in verify_seed
+    // Bug 1: Uninitialized variable in calculate_checksum
+    if (userCode.includes('int sum;') && !userCode.includes('int sum = 0;')) {
+      foundBugs.push('Uninitialized variable');
+    }
+
+    // Bug 2: Infinite loop in calculate_checksum
+    if (userCode.includes('while (value >= 0)')) {
+      foundBugs.push('Infinite loop condition');
+    }
+
+    // Bug 3: Assignment instead of comparison in verify_seed
     if (userCode.includes('if (actual = expected_checksum)')) {
-      foundBugs.push('Assignment (=) used instead of comparison (==) in verify_seed function');
+      foundBugs.push('Assignment used instead of comparison');
     }
 
-    // Bug 2: Integer division in decode_latitude
+    // Bug 4: Integer division in decode_latitude
     if (userCode.includes('(seed_a % 10000) / 10000') && !userCode.includes('(seed_a % 10000) / 10000.0')) {
-      foundBugs.push('Integer division in decode_latitude - should use 10000.0 for floating-point result');
+      foundBugs.push('Integer division in latitude');
     }
 
-    // Bug 3: Integer division in decode_longitude
+    // Bug 5: Integer division in decode_longitude
     if (userCode.includes('seed_c / 10000') && !userCode.includes('seed_c / 10000.0')) {
-      foundBugs.push('Integer division in decode_longitude - should use 10000.0 for floating-point result');
+      foundBugs.push('Integer division in longitude');
+    }
+
+    // Bug 6: Missing negative sign for longitude
+    if (!userCode.includes('-(lon_degrees + lon_minutes)') && !userCode.includes('-1 *') && !userCode.includes('0 -')) {
+      foundBugs.push('Incorrect longitude sign');
+    }
+
+    // Bug 7: Missing semicolon
+    if (userCode.includes('int seed_c =') && !userCode.includes('int seed_c = ' + answers.c + ';')) {
+      foundBugs.push('Missing semicolon');
+    }
+
+    // Bug 8: Wrong printf format
+    if (userCode.includes('printf("SEED_A checksum: %f') || userCode.includes('printf("SEED_B checksum: %f') || userCode.includes('printf("SEED_C checksum: %f')) {
+      foundBugs.push('Incorrect format specifier');
     }
 
     const allFixed = foundBugs.length === 0;
@@ -240,7 +265,7 @@ Coordinates locked for Mars mission
 ⚠ Mission may fail due to incorrect targeting`;
 
       setOutput(executionOutput);
-      setErrorMessage(`Found ${result.bugs.length} bug${result.bugs.length > 1 ? 's' : ''} in the code. Fix all bugs to proceed!`);
+      setErrorMessage(`Compilation Failed: ${result.bugs.length} errors detected.`);
     }
   };
 
@@ -268,7 +293,7 @@ Coordinates locked for Mars mission
             <Terminal className="w-5 h-5" />
             mars_locator.c
             {hasExecuted && !isCorrect && (
-              <span className="text-red-400 text-sm ml-auto">{bugsFound.length} bug{bugsFound.length > 1 ? 's' : ''} remaining</span>
+              <span className="text-red-400 text-sm ml-auto">Errors detected</span>
             )}
             {hasExecuted && isCorrect && (
               <span className="text-green-400 text-sm ml-auto flex items-center gap-1">
@@ -282,9 +307,9 @@ Coordinates locked for Mars mission
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="w-full h-[650px] bg-black p-4 rounded font-mono text-sm text-green-400 border border-slate-700 focus:border-amber-500 focus:outline-none resize-none overflow-auto"
+            className="w-full bg-black p-4 rounded font-mono text-sm text-green-400 border border-slate-700 focus:border-amber-500 focus:outline-none resize-none"
             spellCheck={false}
-            style={{ tabSize: 4, lineHeight: '1.5' }}
+            style={{ tabSize: 4, lineHeight: '1.5', height: '2500px' }}
           />
           <div className="mt-4 flex gap-3">
             <Button
@@ -338,17 +363,8 @@ Coordinates locked for Mars mission
                     <AlertCircle className="w-5 h-5" />
                     {errorMessage}
                   </p>
-                  <div className="text-sm space-y-1 mt-3">
-                    <p className="text-slate-300 font-semibold">Bugs still present:</p>
-                    {bugsFound.map((bug, index) => (
-                      <p key={index} className="text-red-400 ml-4">• {bug}</p>
-                    ))}
-                  </div>
-                </div>
-                <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded">
-                  <p className="text-amber-300 text-sm">
-                    <span className="font-semibold">💡 Tip:</span> The coordinates look like integers instead of precise decimal values.
-                    Check your division operations and comparison operators!
+                  <p className="text-slate-400 text-sm mt-2">
+                    Review the code carefully. Check for syntax errors, logic flaws, and type mismatches.
                   </p>
                 </div>
               </div>
