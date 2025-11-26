@@ -281,10 +281,13 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
         <Card className="w-full max-w-2xl mx-auto p-8 bg-gradient-to-br from-[#24103B] via-[#213057] to-[#122352] border-border backdrop-blur">
           <div className="flex items-center justify-between mb-4">
             <div>
+              <span className="text-white font-bold text-14xl">Welcome to the WormHole</span>
+            </div>
+            <div>
               <span className="text-white text-6xl font-bold">
                 {moves}
               </span>
-              <span className="text-white ml-2 text-4xl">moves</span>
+              <span className="text-white ml-2 text-4xl"> moves</span>
             </div>
           </div>
 

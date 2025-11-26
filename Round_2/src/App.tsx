@@ -228,7 +228,7 @@ export default function App() {
 
           {currentStage === 'code' && (
             <CodeExecutor
-              answers={{ a: 123456, b: 45, c: 6789 }} // Test data for debugging phase
+              answers={{ a: 280000, b: 80, c: 0 }} // Fixed seeds for Latitude 28, Longitude 80
               onExecute={() => {
                 advanceStage('riddles');
               }}
