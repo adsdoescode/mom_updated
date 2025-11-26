@@ -269,7 +269,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
             <Button
               onClick={handleSubmitAnswer}
               disabled={!selectedAnswer || quizPassed}
-              className="px-24 py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Submit Answer
             </Button>
@@ -281,10 +281,10 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
         <Card className="w-full max-w-2xl mx-auto p-8 bg-gradient-to-br from-[#24103B] via-[#213057] to-[#122352] border-border backdrop-blur">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <span className="text-purple-400 text-2xl font-bold">
+              <span className="text-white text-6xl font-bold">
                 {moves}
               </span>
-              <span className="text-gray-400 ml-2 text-sm">moves</span>
+              <span className="text-white ml-2 text-4xl">moves</span>
             </div>
           </div>
 
@@ -379,7 +379,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
                       style={tile !== EMPTY_TILE ? getTileStyle(tile) : {}}
                     >
                       {tile !== EMPTY_TILE && (
-                        <span className="absolute top-2 right-2 text-white text-xs font-bold px-2 py-1 bg-black/40 backdrop-blur-md border border-white/10 rounded shadow-sm">
+                        <span className="absolute top-2 left-2 text-white text-xl font-bold px-3 py-1 bg-black/50 backdrop-blur-md border border-white/10 rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.1)]">
                           {tile + 1}
                         </span>
                       )}
@@ -402,7 +402,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
             <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Button
                 onClick={onComplete}
-                className="px-24 py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900"
+                className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900"
                 size="lg"
               >
                 Proceed to Next Mission

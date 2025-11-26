@@ -69,13 +69,12 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
       <Card className="bg-slate-900/50 border-amber-500">
         <CardHeader>
           <CardTitle className="text-amber-300 flex items-center gap-2">
-            <MapPin className="w-5 h-5" />
-            Enter Coordinates
+            Enter the access codes
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4 justify-center">
-            <div className="space-y-2 w-1/2">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-2">
               <label className="text-slate-300 text-sm block mb-1">DIV_A</label>
               <input
                 type="text"
@@ -85,7 +84,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
                 placeholder="e.g. 28.6083"
               />
             </div>
-            <div className="space-y-2 w-1/2">
+            <div className="space-y-2">
               <label className="text-slate-300 text-sm block mb-1">DIV_B</label>
               <input
                 type="text"
@@ -154,7 +153,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
           size="lg"
         >
           <Lock className="w-5 h-5 mr-2" />
-          Enter Password to Continue
+          Enter access codes to Continue
         </Button>
       </div>
     </div>

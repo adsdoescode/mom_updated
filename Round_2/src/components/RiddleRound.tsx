@@ -140,7 +140,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
           className="bg-amber-500 hover:bg-amber-600 text-slate-900"
           size="lg"
         >
-          {allCorrect ? 'Proceed to Code Execution' : '🔒 Solve All Riddles to Continue'}
+          {allCorrect ? 'Proceed to the next section' : '🔒 Solve All Riddles to Continue'}
         </Button>
       </div>
     </div>
