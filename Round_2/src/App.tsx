@@ -5,6 +5,8 @@ import { MapReveal } from './components/MapReveal';
 import { PasswordEntry } from './components/PasswordEntry';
 import { RoundThree } from './components/RoundThree';
 import { SlidingPuzzle } from './components/SlidingPuzzle';
+import { Button } from './components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export default function App() {
   const stages = ['puzzle', 'code', 'riddles', 'map', 'password', 'round3'] as const;
@@ -180,6 +182,41 @@ export default function App() {
           })}
         </div>
 
+        {/* Navigation Controls */}
+        <div className="flex justify-between mb-8 max-w-2xl mx-auto">
+          <Button
+            onClick={() => {
+              const currentIndex = stages.indexOf(currentStage);
+              if (currentIndex > 0) {
+                setCurrentStage(stages[currentIndex - 1]);
+              }
+            }}
+            disabled={stages.indexOf(currentStage) === 0}
+            variant="outline"
+            className="border-slate-600 text-slate-300 hover:bg-slate-800 disabled:opacity-30"
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Previous
+          </Button>
+
+          <Button
+            onClick={() => {
+              const currentIndex = stages.indexOf(currentStage);
+              if (currentIndex < stages.length - 1) {
+                setCurrentStage(stages[currentIndex + 1]);
+              }
+            }}
+            disabled={
+              stages.indexOf(currentStage) >= stages.indexOf(maxStage) ||
+              stages.indexOf(currentStage) === stages.length - 1
+            }
+            className="bg-slate-700 hover:bg-slate-600 text-white disabled:opacity-30"
+          >
+            Next
+            <ChevronRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+
         {/* Main Content */}
         <div className="bg-slate-800/50 backdrop-blur rounded-lg p-8 border border-slate-700 shadow-2xl">
           {currentStage === 'puzzle' && (
@@ -236,6 +273,6 @@ export default function App() {
           <p>Mission Classification: TOP SECRET • Clearance Level: RESTRICTED</p>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

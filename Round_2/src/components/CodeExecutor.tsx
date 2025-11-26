@@ -395,7 +395,7 @@ Coordinates locked for Mars mission
                   ✓ All bugs fixed! Navigation system operational.
                 </p>
                 <p className="text-emerald-300 text-sm">Coordinates decoded with full precision</p>
-                <p className="text-slate-400 text-sm mt-2">Proceeding to map visualization...</p>
+                <p className="text-emerald-300 text-sm">Coordinates decoded with full precision</p>
               </div>
             ) : (
               <div className="mt-4 space-y-3">
@@ -412,6 +412,23 @@ Coordinates locked for Mars mission
             )}
           </CardContent>
         </Card>
+      )}
+
+      {/* Proceed Button - Outside the card */}
+      {hasExecuted && isCorrect && (
+        <div className="flex justify-center mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <Button
+            onClick={() => {
+              const latFloat = answers.a / 10000.0;
+              const lonFloat = -(answers.b + answers.c / 10000.0);
+              onExecute(latFloat, lonFloat);
+            }}
+            className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900"
+            size="lg"
+          >
+            Proceed to Next Mission
+          </Button>
+        </div>
       )}
     </div>
   );
