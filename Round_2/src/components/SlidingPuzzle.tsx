@@ -74,10 +74,11 @@ const getValidMoves = (emptyIndex: number): number[] => {
 
 interface SlidingPuzzleProps {
   onComplete: () => void;
+  isCompleted?: boolean;
 }
 
-export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
-  const [board, setBoard] = useState<Board>(createSolvedBoard());
+export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzleProps) {
+  const [board, setBoard] = useState<Board>(isCompleted ? createSolvedBoard() : createSolvedBoard());
   const [moves, setMoves] = useState(0);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [imageLoadError, setImageLoadError] = useState(false);
@@ -94,10 +95,17 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
     img.src = PUZZLE_IMAGE;
     img.onload = () => {
       setIsImageLoaded(true);
-      setTimeout(() => handleShuffle(), 500);
+      if (!isCompleted) {
+        setTimeout(() => handleShuffle(), 500);
+      } else {
+        setSolved(true);
+        setQuizPassed(true);
+        setSelectedAnswer(CORRECT_OPTION_ID);
+        setSubmitted(true);
+      }
     };
     img.onerror = () => setImageLoadError(true);
-  }, []);
+  }, [isCompleted]);
 
   const handleShuffle = () => {
     setBoard(shuffleBoard(createSolvedBoard()));
@@ -160,7 +168,7 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
 
   return (
     <div className="flex flex-col items-center gap-8 w-full">
-      {!quizPassed && (
+      {!quizPassed && !isCompleted && (
         <Card className="w-full max-w-2xl mx-auto px-8 py-10 bg-gradient-to-br from-[#1b1138] via-[#151a3a] to-[#0b1022] border border-slate-800/80 shadow-[0_0_40px_rgba(15,23,42,0.9)]">
           <div className="mb-6">
             <h2 className="text-2xl font-semibold text-white leading-snug">
@@ -261,12 +269,7 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
             <Button
               onClick={handleSubmitAnswer}
               disabled={!selectedAnswer || quizPassed}
-              style={{
-                backgroundColor: !selectedAnswer || quizPassed ? '#4b5563' : '#16a34a',
-                color: 'white',
-                cursor: !selectedAnswer || quizPassed ? 'not-allowed' : 'pointer',
-              }}
-              className="px-24 py-6 text-2xl font-bold rounded-lg transition-all hover:opacity-90 shadow-lg"
+              className="px-24 py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Submit Answer
             </Button>
@@ -274,17 +277,9 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
         </Card>
       )}
 
-      {quizPassed && (
+      {(quizPassed || isCompleted) && (
         <Card className="w-full max-w-2xl mx-auto p-8 bg-gradient-to-br from-[#24103B] via-[#213057] to-[#122352] border-border backdrop-blur">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <span className="text-purple-300 text-lg font-semibold">
-                Wormhole Puzzle
-              </span>
-              <div className="text-gray-300 text-sm">
-                Click tiles adjacent to the empty space to slide them
-              </div>
-            </div>
             <div>
               <span className="text-purple-400 text-2xl font-bold">
                 {moves}
@@ -292,33 +287,36 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
               <span className="text-gray-400 ml-2 text-sm">moves</span>
             </div>
           </div>
-          <div className="flex gap-3 mb-3">
-            <Button
-              onClick={handleShuffle}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4"
-              size="sm"
-            >
-              Reset Puzzle
-            </Button>
-            <Button
-              onClick={solvePuzzle}
-              disabled={solved}
-              className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-              size="sm"
-            >
-              Solve Puzzle
-            </Button>
-            <Button
-              onClick={() => setShowHint((h) => !h)}
-              className={`font-semibold px-4 ${showHint
-                ? "bg-[#33ccbe]/80 text-white"
-                : "bg-[#33ccbe] text-white"
-                }`}
-              size="sm"
-            >
-              {showHint ? "Hide Hint" : "Show Hint"}
-            </Button>
-          </div>
+
+          {!isCompleted && (
+            <div className="flex gap-3 mb-3">
+              <Button
+                onClick={handleShuffle}
+                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4"
+                size="sm"
+              >
+                Reset Puzzle
+              </Button>
+              <Button
+                onClick={solvePuzzle}
+                disabled={solved}
+                className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                size="sm"
+              >
+                Solve Puzzle
+              </Button>
+              <Button
+                onClick={() => setShowHint((h) => !h)}
+                className={`font-semibold px-4 transition-colors ${showHint
+                  ? "bg-[#33ccbe]/80 text-white hover:bg-[#33ccbe]/60"
+                  : "bg-[#33ccbe] text-white hover:bg-[#33ccbe]/80"
+                  }`}
+                size="sm"
+              >
+                {showHint ? "Hide Hint" : "Show Hint"}
+              </Button>
+            </div>
+          )}
 
           {showHint && (
             <div
@@ -404,10 +402,10 @@ export function SlidingPuzzle({ onComplete }: SlidingPuzzleProps) {
             <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Button
                 onClick={onComplete}
-                className="bg-amber-500 hover:bg-amber-600 text-slate-900 px-24 py-8 text-3xl font-bold shadow-lg shadow-amber-900/20"
+                className="px-24 py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900"
                 size="lg"
               >
-                🚀 Proceed to Next Mission
+                Proceed to Next Mission
               </Button>
             </div>
           )}

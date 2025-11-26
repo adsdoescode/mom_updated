@@ -7,7 +7,20 @@ import { RoundThree } from './components/RoundThree';
 import { SlidingPuzzle } from './components/SlidingPuzzle';
 
 export default function App() {
-  const [currentStage, setCurrentStage] = useState<'puzzle' | 'riddles' | 'code' | 'map' | 'password' | 'round3'>('puzzle');
+  const stages = ['puzzle', 'code', 'riddles', 'map', 'password', 'round3'] as const;
+  type Stage = typeof stages[number];
+
+  const [currentStage, setCurrentStage] = useState<Stage>('puzzle');
+  const [maxStage, setMaxStage] = useState<Stage>('puzzle');
+
+  const advanceStage = (nextStage: Stage) => {
+    setCurrentStage(nextStage);
+    const nextIndex = stages.indexOf(nextStage);
+    const maxIndex = stages.indexOf(maxStage);
+    if (nextIndex > maxIndex) {
+      setMaxStage(nextStage);
+    }
+  };
   const [riddleAnswers, setRiddleAnswers] = useState({ a: 0, b: 0, c: 0 });
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
@@ -145,24 +158,34 @@ export default function App() {
 
         {/* Progress Indicator */}
         <div className="flex justify-center gap-2 mb-8">
-          {['puzzle', 'code', 'riddles', 'map', 'password', 'round3'].map((stage, idx) => (
-            <div
-              key={stage}
-              className={`h-2 w-16 rounded-full transition-all ${currentStage === stage
-                ? 'bg-amber-400'
-                : ['puzzle', 'code', 'riddles', 'map', 'password', 'round3'].indexOf(currentStage) > idx
-                  ? 'bg-green-500'
-                  : 'bg-slate-700'
-                }`}
-            />
-          ))}
+          {stages.map((stage, idx) => {
+            const isUnlocked = stages.indexOf(stage) <= stages.indexOf(maxStage);
+            return (
+              <div
+                key={stage}
+                onClick={() => {
+                  if (isUnlocked) {
+                    setCurrentStage(stage);
+                  }
+                }}
+                className={`h-2 w-16 rounded-full transition-all ${isUnlocked ? 'cursor-pointer hover:opacity-80' : 'cursor-not-allowed opacity-50'
+                  } ${currentStage === stage
+                    ? 'bg-amber-400'
+                    : stages.indexOf(currentStage) > idx
+                      ? 'bg-green-500'
+                      : 'bg-slate-700'
+                  }`}
+              />
+            );
+          })}
         </div>
 
         {/* Main Content */}
         <div className="bg-slate-800/50 backdrop-blur rounded-lg p-8 border border-slate-700 shadow-2xl">
           {currentStage === 'puzzle' && (
             <SlidingPuzzle
-              onComplete={() => setCurrentStage('code')}
+              onComplete={() => advanceStage('code')}
+              isCompleted={stages.indexOf('puzzle') < stages.indexOf(maxStage)}
             />
           )}
 
@@ -170,8 +193,9 @@ export default function App() {
             <CodeExecutor
               answers={{ a: 123456, b: 45, c: 6789 }} // Test data for debugging phase
               onExecute={() => {
-                setCurrentStage('riddles');
+                advanceStage('riddles');
               }}
+              isCompleted={stages.indexOf('code') < stages.indexOf(maxStage)}
             />
           )}
 
@@ -183,21 +207,24 @@ export default function App() {
                 const lat = answers.a / 10000.0;
                 const lon = -(answers.b + answers.c / 10000.0);
                 setCoordinates({ lat, lon });
-                setCurrentStage('map');
+                advanceStage('map');
               }}
+              isCompleted={stages.indexOf('riddles') < stages.indexOf(maxStage)}
             />
           )}
 
           {currentStage === 'map' && (
             <MapReveal
               coordinates={coordinates}
-              onContinue={() => setCurrentStage('password')}
+              onContinue={() => advanceStage('password')}
+              isCompleted={stages.indexOf('map') < stages.indexOf(maxStage)}
             />
           )}
 
           {currentStage === 'password' && (
             <PasswordEntry
-              onCorrectPassword={() => setCurrentStage('round3')}
+              onCorrectPassword={() => advanceStage('round3')}
+              isCompleted={stages.indexOf('password') < stages.indexOf(maxStage)}
             />
           )}
 

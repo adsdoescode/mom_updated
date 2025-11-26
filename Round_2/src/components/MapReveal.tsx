@@ -2,14 +2,42 @@ import { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { MapPin, Lock } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix for default marker icon in Leaflet with React
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+let DefaultIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [25, 41],
+  iconAnchor: [12, 41]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 interface MapRevealProps {
   coordinates: { lat: number; lon: number };
   onContinue: () => void;
+  isCompleted?: boolean;
 }
 
-export function MapReveal({ coordinates, onContinue }: MapRevealProps) {
-  const [revealed, setRevealed] = useState(false);
+// Component to update map center
+function ChangeView({ center, zoom }: { center: [number, number], zoom: number }) {
+  const map = useMap();
+  map.setView(center, zoom);
+  return null;
+}
+
+export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapRevealProps) {
+  const [revealed, setRevealed] = useState(isCompleted);
+  const [inputLat, setInputLat] = useState(isCompleted ? String(coordinates.lat) : '');
+  const [inputLon, setInputLon] = useState(isCompleted ? String(coordinates.lon) : '');
+  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(isCompleted ? [coordinates.lat, coordinates.lon] : null);
+  const [isCorrect, setIsCorrect] = useState(isCompleted);
 
   useEffect(() => {
     // Auto-reveal after a short delay
@@ -17,30 +45,56 @@ export function MapReveal({ coordinates, onContinue }: MapRevealProps) {
     return () => clearTimeout(timer);
   }, []);
 
-  const { lat, lon } = coordinates;
-  
-  // Map URL using OpenStreetMap
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.05},${lat - 0.05},${lon + 0.05},${lat + 0.05}&layer=mapnik&marker=${lat},${lon}`;
+  useEffect(() => {
+    const lat = parseFloat(inputLat);
+    const lon = parseFloat(inputLon);
+    if (!isNaN(lat) && !isNaN(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+      setMarkerPosition([lat, lon]);
+
+      // Check if coordinates match target (with tolerance)
+      const tolerance = 0.01;
+      const latMatch = Math.abs(lat - coordinates.lat) < tolerance;
+      const lonMatch = Math.abs(lon - coordinates.lon) < tolerance;
+      setIsCorrect(latMatch && lonMatch);
+    } else {
+      setMarkerPosition(null);
+      setIsCorrect(false);
+    }
+  }, [inputLat, inputLon, coordinates]);
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-6">
-        <h2 className="text-amber-400 mb-2">Round 2: Location Reveal</h2>
-        <p className="text-slate-300">The coordinates point to a specific location. Find its name to unlock Round 3.</p>
-      </div>
 
-      {/* Coordinates Display */}
+      {/* Input Fields */}
       <Card className="bg-slate-900/50 border-amber-500">
         <CardHeader>
           <CardTitle className="text-amber-300 flex items-center gap-2">
             <MapPin className="w-5 h-5" />
-            Mission Target Coordinates
+            Enter Coordinates
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center space-y-2">
-            <p className="text-slate-300">Latitude: <span className="text-green-400 font-mono">{lat.toFixed(4)}°</span></p>
-            <p className="text-slate-300">Longitude: <span className="text-green-400 font-mono">{lon.toFixed(4)}°</span></p>
+          <div className="flex gap-4 justify-center">
+            <div className="space-y-2 w-1/2">
+              <label className="text-slate-300 text-sm block mb-1">DIV_A</label>
+              <input
+                type="text"
+                value={inputLat}
+                onChange={(e) => setInputLat(e.target.value)}
+                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500"
+                placeholder="e.g. 28.6083"
+              />
+            </div>
+            <div className="space-y-2 w-1/2">
+              <label className="text-slate-300 text-sm block mb-1">DIV_B</label>
+              <input
+                type="text"
+                value={inputLon}
+                onChange={(e) => setInputLon(e.target.value)}
+                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500"
+                placeholder="e.g. -80.6042"
+              />
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -52,15 +106,23 @@ export function MapReveal({ coordinates, onContinue }: MapRevealProps) {
             <CardTitle className="text-amber-300">Interactive Map</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="relative w-full h-96 rounded-lg overflow-hidden border-2 border-slate-700">
-              <iframe
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                scrolling="no"
-                src={mapUrl}
-                className="rounded"
-              />
+            <div className="relative w-full h-96 rounded-lg overflow-hidden border-2 border-slate-700 z-0">
+              <MapContainer center={[20, 0]} zoom={2} style={{ height: '100%', width: '100%' }}>
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                {markerPosition && (
+                  <>
+                    <Marker position={markerPosition}>
+                      <Popup>
+                        Target Location
+                      </Popup>
+                    </Marker>
+                    <ChangeView center={markerPosition} zoom={13} />
+                  </>
+                )}
+              </MapContainer>
             </div>
             <div className="mt-4 text-center">
               <p className="text-slate-400 text-sm">
@@ -78,10 +140,7 @@ export function MapReveal({ coordinates, onContinue }: MapRevealProps) {
         </CardHeader>
         <CardContent>
           <p className="text-slate-300">
-            This location is a famous space center in Florida. The password is the three-letter acronym for this facility. 
-          </p>
-          <p className="text-slate-400 text-sm mt-2">
-            Hint: It's where many historic NASA missions have launched from.
+            This location is a famous space center in Florida. The password is the three-letter acronym for this facility.
           </p>
         </CardContent>
       </Card>
@@ -90,7 +149,8 @@ export function MapReveal({ coordinates, onContinue }: MapRevealProps) {
       <div className="text-center pt-4">
         <Button
           onClick={onContinue}
-          className="bg-amber-500 hover:bg-amber-600 text-slate-900"
+          disabled={!isCorrect}
+          className={`bg-amber-500 hover:bg-amber-600 text-slate-900 ${!isCorrect ? 'opacity-50 cursor-not-allowed' : ''}`}
           size="lg"
         >
           <Lock className="w-5 h-5 mr-2" />
