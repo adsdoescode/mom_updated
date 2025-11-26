@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Play, Volume2 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import videoFile from '../public/video.mp4';
 
 export function BriefingVideo() {
   return (
@@ -14,13 +15,13 @@ export function BriefingVideo() {
       <CardContent className="space-y-6">
         {/* Embedded Video */}
         <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-          <iframe
-            src="https://www.youtube.com/embed/4DXFurrTM_g"
-            className="w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            title="Mars Climate Orbiter Mission Briefing"
-          />
+          <video
+            src={videoFile}
+            controls
+            className="w-full h-full"
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         {/* Video Key Points */}
