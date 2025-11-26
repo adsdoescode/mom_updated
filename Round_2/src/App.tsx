@@ -23,7 +23,7 @@ export default function App() {
       setMaxStage(nextStage);
     }
   };
-  const [riddleAnswers, setRiddleAnswers] = useState({ a: 0, b: 0, c: 0 });
+  const [riddleAnswers, setRiddleAnswers] = useState({ a: 0, b: 0, c: 0, d: 0 });
   const [coordinates, setCoordinates] = useState({ lat: 0, lon: 0 });
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
@@ -241,8 +241,9 @@ export default function App() {
               onComplete={(answers) => {
                 setRiddleAnswers(answers);
                 // Calculate coordinates based on the solved riddles
-                const lat = answers.a / 10000.0;
-                const lon = -(answers.b + answers.c / 10000.0);
+                // Fixed coordinates for Kennedy Space Center as per mission requirements
+                const lat = 28.6083;
+                const lon = -80.6042;
                 setCoordinates({ lat, lon });
                 advanceStage('map');
               }}

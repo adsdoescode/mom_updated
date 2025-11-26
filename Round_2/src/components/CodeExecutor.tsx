@@ -244,10 +244,11 @@ Execution halted.`);
     if (result.bugs.includes('Integer division in longitude')) {
       lon_fraction = Math.floor(answers.c / 10000); // 0
     }
-    let lonFloat = (lon_degrees + lon_fraction);
+    let lonFloat = -(lon_degrees + lon_fraction);
     if (result.bugs.includes('Incorrect longitude sign')) {
       lonFloat = lon_degrees + lon_fraction;
     }
+
 
     const checksum_a = String(answers.a).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
     const checksum_b = String(answers.b).split('').reduce((sum, digit) => sum + parseInt(digit), 0);
