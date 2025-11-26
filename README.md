@@ -6,7 +6,6 @@
   ## Running the code
 
   Run `npm install` to install the dependencies.
-
-  Run `npm run build:r1` and `npm run build:r2`
+  Run `npm run build` to build the unit
   Run `npm start` to run the server
   

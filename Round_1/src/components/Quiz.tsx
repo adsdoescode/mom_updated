@@ -17,7 +17,6 @@ RULES:
 3) After selecting answers for ALL questions, press SUBMIT exactly once.
 4) On submit:
    - Your chosen options will turn GREEN if correct and RED if wrong.
-   - Wrong choices will NOT reveal the correct answer.
 5) Final System Access Code = Sum of codes (A=1, B=2, C=3, D=4) for all CORRECT answers.
 For example, if there are 6 questions with options A, B, C, A, D, B, your code would be 1 + 2 + 3 + 1 + 4 + 2 = 13.
 `;

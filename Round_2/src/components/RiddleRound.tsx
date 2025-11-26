@@ -65,6 +65,7 @@ export function RiddleRound({ onComplete }: RiddleRoundProps) {
               placeholder="Enter your answer..."
               value={answer1}
               onChange={(e) => setAnswer1(e.target.value)}
+              onWheel={(e) => e.currentTarget.blur()}
               className="bg-slate-800 border-slate-600 text-slate-200"
             />
             {isCorrect1 && <CheckCircle2 className="w-10 h-10 text-green-500 flex-shrink-0" />}
@@ -95,6 +96,7 @@ export function RiddleRound({ onComplete }: RiddleRoundProps) {
               placeholder="Enter your answer..."
               value={answer2}
               onChange={(e) => setAnswer2(e.target.value)}
+              onWheel={(e) => e.currentTarget.blur()}
               className="bg-slate-800 border-slate-600 text-slate-200"
             />
             {isCorrect2 && <CheckCircle2 className="w-10 h-10 text-green-500 flex-shrink-0" />}
@@ -125,6 +127,7 @@ export function RiddleRound({ onComplete }: RiddleRoundProps) {
               placeholder="Enter your answer..."
               value={answer3}
               onChange={(e) => setAnswer3(e.target.value)}
+              onWheel={(e) => e.currentTarget.blur()}
               className="bg-slate-800 border-slate-600 text-slate-200"
             />
             {isCorrect3 && <CheckCircle2 className="w-10 h-10 text-green-500 flex-shrink-0" />}

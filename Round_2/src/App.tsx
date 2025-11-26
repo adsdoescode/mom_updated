@@ -145,14 +145,14 @@ export default function App() {
 
         {/* Progress Indicator */}
         <div className="flex justify-center gap-2 mb-8">
-          {['puzzle', 'riddles', 'code', 'map', 'password', 'round3'].map((stage, idx) => (
+          {['puzzle', 'code', 'riddles', 'map', 'password', 'round3'].map((stage, idx) => (
             <div
               key={stage}
               className={`h-2 w-16 rounded-full transition-all ${currentStage === stage
-                  ? 'bg-amber-400'
-                  : ['puzzle', 'riddles', 'code', 'map', 'password', 'round3'].indexOf(currentStage) > idx
-                    ? 'bg-green-500'
-                    : 'bg-slate-700'
+                ? 'bg-amber-400'
+                : ['puzzle', 'code', 'riddles', 'map', 'password', 'round3'].indexOf(currentStage) > idx
+                  ? 'bg-green-500'
+                  : 'bg-slate-700'
                 }`}
             />
           ))}
@@ -162,7 +162,16 @@ export default function App() {
         <div className="bg-slate-800/50 backdrop-blur rounded-lg p-8 border border-slate-700 shadow-2xl">
           {currentStage === 'puzzle' && (
             <SlidingPuzzle
-              onComplete={() => setCurrentStage('riddles')}
+              onComplete={() => setCurrentStage('code')}
+            />
+          )}
+
+          {currentStage === 'code' && (
+            <CodeExecutor
+              answers={{ a: 123456, b: 45, c: 6789 }} // Test data for debugging phase
+              onExecute={() => {
+                setCurrentStage('riddles');
+              }}
             />
           )}
 
@@ -170,15 +179,9 @@ export default function App() {
             <RiddleRound
               onComplete={(answers) => {
                 setRiddleAnswers(answers);
-                setCurrentStage('code');
-              }}
-            />
-          )}
-
-          {currentStage === 'code' && (
-            <CodeExecutor
-              answers={riddleAnswers}
-              onExecute={(lat, lon) => {
+                // Calculate coordinates based on the solved riddles
+                const lat = answers.a / 10000.0;
+                const lon = -(answers.b + answers.c / 10000.0);
                 setCoordinates({ lat, lon });
                 setCurrentStage('map');
               }}
