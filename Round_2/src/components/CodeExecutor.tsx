@@ -213,10 +213,7 @@ Coordinates locked for Mars mission
       setOutput(executionOutput);
       setErrorMessage('');
 
-      // Wait before proceeding
-      setTimeout(() => {
-        onExecute(latFloat, lonFloat);
-      }, 2500);
+      setErrorMessage('');
     } else {
       // Buggy output - showing wrong calculations
       const latInt = Math.floor(answers.a / 10000);
@@ -354,7 +351,18 @@ Coordinates locked for Mars mission
                   ✓ All bugs fixed! Navigation system operational.
                 </p>
                 <p className="text-emerald-300 text-sm">Coordinates decoded with full precision</p>
-                <p className="text-slate-400 text-sm mt-2">Proceeding to map visualization...</p>
+                <p className="text-emerald-300 text-sm">Coordinates decoded with full precision</p>
+                <Button
+                  onClick={() => {
+                    const latFloat = answers.a / 10000.0;
+                    const lonFloat = -(answers.b + answers.c / 10000.0);
+                    onExecute(latFloat, lonFloat);
+                  }}
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-900 mt-4 font-bold text-lg px-8 py-6"
+                  size="lg"
+                >
+                  🚀 Proceed to Next Mission
+                </Button>
               </div>
             ) : (
               <div className="mt-4 space-y-3">
