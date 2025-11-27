@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Play, Volume2 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import videoFile from '../public/video.mp4';
+import videoFile from '../public/video1.mp4';
 
 export function BriefingVideo() {
   return (
@@ -51,7 +51,7 @@ export function BriefingVideo() {
           <div className="p-4 bg-slate-900/50 rounded-lg border border-red-900/30">
             <h3 className="text-red-400 mb-2">🎯 Your Mission</h3>
             <p className="text-sm">
-              As part of the investigation team, you must analyze mission data, identify what went wrong, 
+              As part of the investigation team, you must analyze mission data, identify what went wrong,
               and locate the classified document. A hidden password in the incident report will grant you access.
             </p>
           </div>
@@ -59,7 +59,7 @@ export function BriefingVideo() {
           <div className="p-4 bg-amber-900/20 rounded-lg border border-amber-700/30">
             <h3 className="text-amber-400 mb-2">⚠️ Security Clearance Required</h3>
             <p className="text-sm text-amber-200">
-              Some information is classified. Find the access code hidden within the mission data to unlock 
+              Some information is classified. Find the access code hidden within the mission data to unlock
               the full investigation findings and proceed to Round 2.
             </p>
           </div>
