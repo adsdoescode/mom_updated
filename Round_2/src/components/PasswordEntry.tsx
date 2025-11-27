@@ -65,7 +65,7 @@ export function PasswordEntry({ onCorrectPassword, isCompleted = false }: Passwo
               />
               <Button
                 onClick={handleSubmit}
-                className={`bg-green-500 hover:bg-green-600 text-white ${isCompleted ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`bg-green-500 hover:bg-green-600 text-white ${isCompleted ? 'opacity-50 cursor-pointer' : ''}`}
                 disabled={isCompleted}
               >
                 {isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <Unlock className="w-5 h-5" />}

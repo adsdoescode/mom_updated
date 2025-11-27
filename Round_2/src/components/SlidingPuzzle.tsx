@@ -269,7 +269,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
             <Button
               onClick={handleSubmitAnswer}
               disabled={!selectedAnswer || quizPassed}
-              className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 disabled:opacity-50 cursor-pointer"
             >
               Submit Answer
             </Button>
@@ -279,125 +279,130 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
 
       {(quizPassed || isCompleted) && (
         <Card className="w-full max-w-2xl mx-auto p-8 bg-gradient-to-br from-[#24103B] via-[#213057] to-[#122352] border-border backdrop-blur">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <span className="text-white font-bold text-14xl">Welcome to the WormHole</span>
+          <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-6">
+            <div className="text-center md:text-left space-y-1">
+              <h2 className="text-amber-400 text-2xl font-bold">
+                Welcome to the WormHole
+              </h2>
+              <p className="text-slate-300">
+                Solve this wormhole puzzle to find your way out
+              </p>
             </div>
-            <div>
-              <span className="text-white text-6xl font-bold">
+            <div className="flex items-baseline gap-2 bg-black/20 px-6 py-3 rounded-xl backdrop-blur-md border border-white/10">
+              <span className="text-amber-400 text-5xl font-bold font-mono">
                 {moves}
               </span>
-              <span className="text-white ml-2 text-4xl"> moves</span>
+              <span className="text-purple-200 text-lg font-medium">moves</span>
             </div>
           </div>
 
-          {!isCompleted && (
-            <div className="flex gap-3 mb-3">
-              <Button
-                onClick={handleShuffle}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4"
-                size="sm"
-              >
-                Reset Puzzle
-              </Button>
-              <Button
-                onClick={solvePuzzle}
-                disabled={solved}
-                className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                size="sm"
-              >
-                Solve Puzzle
-              </Button>
-              <Button
-                onClick={() => setShowHint((h) => !h)}
-                className={`font-semibold px-4 transition-colors ${showHint
-                  ? "bg-[#33ccbe]/80 text-white hover:bg-[#33ccbe]/60"
-                  : "bg-[#33ccbe] text-white hover:bg-[#33ccbe]/80"
-                  }`}
-                size="sm"
-              >
-                {showHint ? "Hide Hint" : "Show Hint"}
-              </Button>
-            </div>
-          )}
+          <div className="bg-slate-900/50 border border-slate-600 rounded-xl p-6 md:p-8">
+            {!isCompleted && (
+              <div className="flex gap-3 mb-6">
+                <Button
+                  onClick={handleShuffle}
+                  className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4"
+                  size="sm"
+                >
+                  Reset Puzzle
+                </Button>
+                <Button
+                  onClick={solvePuzzle}
+                  disabled={solved}
+                  className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                  size="sm"
+                >
+                  Solve Puzzle
+                </Button>
+                <Button
+                  onClick={() => setShowHint((h) => !h)}
+                  className={`font-semibold px-4 transition-colors ${showHint
+                    ? "bg-[#33ccbe]/80 text-white hover:bg-[#33ccbe]/60"
+                    : "bg-[#33ccbe] text-white hover:bg-[#33ccbe]/80"
+                    }`}
+                  size="sm"
+                >
+                  {showHint ? "Hide Hint" : "Show Hint"}
+                </Button>
+              </div>
+            )}
 
-          {showHint && (
-            <div
-              className="rounded-xl border mb-4 flex items-center gap-2 p-4 justify-center"
-              style={{
-                background: "#33ccbe",
-                borderColor: "#33ccbe",
-                color: "#fff",
-                fontWeight: "bold",
-                fontSize: "1.1rem",
-                boxShadow: "0 0 10px 2px #33ccbe33",
-              }}
-            >
-              <span
-                className="inline-flex items-center justify-center font-bold mr-2"
+            {showHint && (
+              <div
+                className="rounded-xl border mb-6 flex items-center gap-2 p-4 justify-center bg-[#33ccbe]/10 border-[#33ccbe]"
                 style={{
-                  background: "#22a993",
                   color: "#fff",
-                  borderRadius: "100%",
-                  width: "28px",
-                  height: "28px",
+                  fontWeight: "bold",
+                  fontSize: "1.1rem",
+                  boxShadow: "0 0 10px 2px #33ccbe33",
                 }}
               >
-                ?
-              </span>
-              <span>{hintText}</span>
-            </div>
-          )}
-
-          <div className="flex flex-row items-center justify-center w-full mb-2">
-            <div className="flex items-center justify-center">
-              {isImageLoaded && !imageLoadError ? (
-                <div
-                  className="grid gap-2 p-2 rounded-lg bg-[#151f38]"
+                <span
+                  className="inline-flex items-center justify-center font-bold mr-2"
                   style={{
-                    gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
-                    width: "min(330px, 95vw)",
-                    aspectRatio: "1",
+                    background: "#22a993",
+                    color: "#fff",
+                    borderRadius: "100%",
+                    width: "28px",
+                    height: "28px",
                   }}
                 >
-                  {board.map((tile, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleTileClick(index)}
-                      className={`
+                  ?
+                </span>
+                <span>{hintText}</span>
+              </div>
+            )}
+
+            <div className="flex flex-row items-center justify-center w-full">
+              <div className="flex items-center justify-center">
+                {isImageLoaded && !imageLoadError ? (
+                  <div
+                    className="grid gap-2 p-2 rounded-lg bg-[#151f38]/50"
+                    style={{
+                      gridTemplateColumns: `repeat(${GRID_SIZE}, 1fr)`,
+                      width: "min(330px, 95vw)",
+                      aspectRatio: "1",
+                    }}
+                  >
+                    {board.map((tile, index) => (
+                      <div
+                        key={index}
+                        onClick={() => handleTileClick(index)}
+                        className={`
                         relative rounded transition-all duration-200 overflow-hidden border border-white/20
                         ${tile === EMPTY_TILE
-                          ? "bg-[#131931] opacity-70"
-                          : "cursor-pointer hover:scale-105"
-                        }
+                            ? "bg-[#131931] opacity-70"
+                            : "cursor-pointer hover:scale-105"
+                          }
                         ${validMoves.includes(index) && tile !== EMPTY_TILE
-                          ? "ring-2 ring-purple-400/80"
-                          : ""
-                        }
+                            ? "ring-2 ring-purple-400/80"
+                            : ""
+                          }
                         ${solved && tile !== EMPTY_TILE
-                          ? "ring-2 ring-green-400"
-                          : ""
-                        }
+                            ? "ring-2 ring-green-400"
+                            : ""
+                          }
                       `}
-                      style={tile !== EMPTY_TILE ? getTileStyle(tile) : {}}
-                    >
-                      {tile !== EMPTY_TILE && (
-                        <span className="absolute top-2 left-2 text-white text-xl font-bold px-3 py-1 bg-black/50 backdrop-blur-md border border-white/10 rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.1)]">
-                          {tile + 1}
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : imageLoadError ? (
-                <div className="h-[330px] flex items-center justify-center bg-[#151f38] rounded-lg text-purple-300">
-                  Image failed to load. Please check your connection.
-                </div>
-              ) : (
-                <div className="h-[330px] flex items-center justify-center bg-[#151f38] rounded-lg text-purple-300">
-                  Loading puzzle...
-                </div>
-              )}
+                        style={tile !== EMPTY_TILE ? getTileStyle(tile) : {}}
+                      >
+                        {tile !== EMPTY_TILE && (
+                          <span className="absolute top-2 left-2 text-white text-xl font-bold px-3 py-1 bg-black/50 backdrop-blur-md border border-white/10 rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),0_2px_4px_-1px_rgba(0,0,0,0.1)]">
+                            {tile + 1}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : imageLoadError ? (
+                  <div className="h-[330px] flex items-center justify-center bg-[#151f38] rounded-lg text-purple-300">
+                    Image failed to load. Please check your connection.
+                  </div>
+                ) : (
+                  <div className="h-[330px] flex items-center justify-center bg-[#151f38] rounded-lg text-purple-300">
+                    Loading puzzle...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -405,7 +410,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
             <div className="mt-8 flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-500">
               <Button
                 onClick={onComplete}
-                className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900"
+                className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 cursor-pointer"
                 size="lg"
               >
                 Proceed to Next Mission

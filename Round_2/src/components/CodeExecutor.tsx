@@ -363,7 +363,7 @@ Coordinates locked for Mars mission
     <div className="space-y-6">
       <div className="text-center mb-6">
         <h2 className="text-amber-400 mb-2 text-2xl font-bold">Debug the Navigation System</h2>
-        <p className="text-slate-300">Fix the bugs in the Mars Mission coordinate decoder</p>
+        <p className="text-slate-300">Oh no! The code logs have been corrupted. Fix the bugs to help locate the mission coordinates</p>
       </div>
 
       {/* Code Editor Card */}
@@ -373,7 +373,7 @@ Coordinates locked for Mars mission
             <Terminal className="w-5 h-5" />
             mars_locator.c
             {hasExecuted && !isCorrect && (
-              <span className="text-red-400 text-sm ml-auto">Errors detected</span>
+              <span className="text-red-400 text-sm ml-auto">{bugsFound.length} Errors detected</span>
             )}
             {hasExecuted && isCorrect && (
               <span className="text-green-400 text-sm ml-auto flex items-center gap-1">
@@ -394,7 +394,7 @@ Coordinates locked for Mars mission
           <div className="mt-4 flex gap-3">
             <Button
               onClick={handleExecute}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold shadow-lg shadow-amber-900/20"
+              className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold shadow-lg shadow-amber-900/20 cursor-pointer"
               size="lg"
             >
               <Play className="w-5 h-5 mr-2" />

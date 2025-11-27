@@ -80,9 +80,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
                 type="text"
                 value={inputLat}
                 onChange={(e) => setInputLat(e.target.value)}
-                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500"
-                placeholder="e.g. 28.6083"
-              />
+                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500" />
             </div>
             <div className="space-y-2">
               <label className="text-slate-300 text-sm block mb-1">DIV_B</label>
@@ -90,9 +88,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
                 type="text"
                 value={inputLon}
                 onChange={(e) => setInputLon(e.target.value)}
-                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500"
-                placeholder="e.g. -80.6042"
-              />
+                className="bg-slate-800 border border-slate-600 text-slate-200 rounded px-3 py-2 w-full focus:outline-none focus:border-amber-500" />
             </div>
           </div>
         </CardContent>
@@ -149,7 +145,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
         <Button
           onClick={onContinue}
           disabled={!isCorrect}
-          className={`bg-amber-500 hover:bg-amber-600 text-slate-900 ${!isCorrect ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`bg-amber-500 hover:bg-amber-600 text-slate-900 ${!isCorrect ? 'opacity-50 cursor-pointer' : ''}`}
           size="lg"
         >
           <Lock className="w-5 h-5 mr-2" />

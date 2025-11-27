@@ -14,27 +14,40 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
   const [answer3, setAnswer3] = useState(isCompleted ? '60' : '');
   const [answer4, setAnswer4] = useState(isCompleted ? '42' : '');
 
-  const correctAnswers = {
-    a: 60,
-    b: 83,
-    c: 60,
-    d: 42,
+  // Encryption logic to prevent inspection
+  const SALT = 'MARS_MISSION_ROUND_2_RIDDLE_SECRET';
+  const encodeAnswer = (key: string, answer: string): string => {
+    const combined = `${key}-${answer}-${SALT}`;
+    let hash = 0;
+    for (let i = 0; i < combined.length; i++) {
+      const char = combined.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
+    }
+    return btoa(String(hash)).replace(/[+/=]/g, (m) => ({ '+': '-', '/': '_', '=': '' }[m] || ''));
   };
 
-  const isCorrect1 = answer1 && parseInt(answer1) === correctAnswers.a;
-  const isCorrect2 = answer2 && parseInt(answer2) === correctAnswers.b;
-  const isCorrect3 = answer3 && parseInt(answer3) === correctAnswers.c;
-  const isCorrect4 = answer4 && parseInt(answer4) === correctAnswers.d;
+  const correctAnswers = {
+    a: 'LTQ2OTc1OTg5',   // 60
+    b: 'MTI0NTgwNTQxOQ', // 83
+    c: 'LTE4OTIzNDMxNTU',// 60
+    d: 'NDI2MDQyMjUw',   // 42
+  };
+
+  const isCorrect1 = answer1 && encodeAnswer('a', answer1) === correctAnswers.a;
+  const isCorrect2 = answer2 && encodeAnswer('b', answer2) === correctAnswers.b;
+  const isCorrect3 = answer3 && encodeAnswer('c', answer3) === correctAnswers.c;
+  const isCorrect4 = answer4 && encodeAnswer('d', answer4) === correctAnswers.d;
 
   const allCorrect = isCorrect1 && isCorrect2 && isCorrect3 && isCorrect4;
 
   const handleSubmit = () => {
     if (allCorrect) {
       onComplete({
-        a: correctAnswers.a,
-        b: correctAnswers.b,
-        c: correctAnswers.c,
-        d: correctAnswers.d,
+        a: 60,
+        b: 83,
+        c: 60,
+        d: 42,
       });
     }
   };
@@ -49,10 +62,10 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
           <div className="flex items-center justify-between">
             <CardTitle className="text-amber-300 flex items-center gap-2">
               {isCorrect1 ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5" />}
-              SEED_A: Latitude Decimal
+              SEED_A
             </CardTitle>
           </div>
-          <CardDescription className="text-slate-400">Riddle for the Latitude Component</CardDescription>
+          <CardDescription className="text-slate-400">Riddle for the Latitude Decimal Component</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="bg-slate-800 p-4 rounded mb-4 border border-slate-700">
@@ -80,10 +93,10 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
           <div className="flex items-center justify-between">
             <CardTitle className="text-amber-300 flex items-center gap-2">
               {isCorrect2 ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5" />}
-              SEED_B: Latitude Decimal
+              SEED_B
             </CardTitle>
           </div>
-          <CardDescription className="text-slate-400">Riddle for the Longitude Degrees</CardDescription>
+          <CardDescription className="text-slate-400">Riddle for the Latitude Decimal Component</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="bg-slate-800 p-4 rounded mb-4 border border-slate-700">
@@ -111,7 +124,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
           <div className="flex items-center justify-between">
             <CardTitle className="text-amber-300 flex items-center gap-2">
               {isCorrect3 ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5" />}
-              SEED_C: Longitude Decimal
+              SEED_C
             </CardTitle>
           </div>
           <CardDescription className="text-slate-400">Riddle for the Longitude Decimal Component</CardDescription>
@@ -142,7 +155,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
           <div className="flex items-center justify-between">
             <CardTitle className="text-amber-300 flex items-center gap-2">
               {isCorrect4 ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5" />}
-              SEED_D: Longitude Decimal
+              SEED_D
             </CardTitle>
           </div>
           <CardDescription className="text-slate-400">Riddle for the Longitude Decimal Component</CardDescription>
@@ -172,7 +185,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
         <Button
           onClick={handleSubmit}
           disabled={!allCorrect}
-          className="bg-amber-500 hover:bg-amber-600 text-slate-900"
+          className="bg-amber-500 hover:bg-amber-600 text-slate-900 cursor-pointer"
           size="lg"
         >
           {allCorrect ? 'Proceed to the next section' : '🔒 Solve All Riddles to Continue'}
