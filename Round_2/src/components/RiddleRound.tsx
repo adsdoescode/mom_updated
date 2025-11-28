@@ -70,7 +70,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
         <CardContent>
           <div className="bg-slate-800 p-4 rounded mb-4 border border-slate-700">
             <p className="text-slate-200 italic">
-              "I am the product of Monica's most ecstatic teaching moment and her most romantic milestone. Count the number of times she frantically shouted 'SEVEN!' in Season 4. Multiply that by the number of friends present in the apartment for the candlelight proposal. What number am I?"
+              "I am a third of the straight, but a sixth of the round. I am the specific speed where a mile equals a minute. I am the age of a Diamond, yet I am born and die every hour. I am five dozen, but I am not eggs. What number am I?"
             </p>
           </div>
           <div className="flex gap-2">
