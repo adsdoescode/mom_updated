@@ -99,6 +99,11 @@ export function UnlockedScreen() {
                 Download Mission Audio
               </a>
             </Button>
+            <Button asChild variant="outline" className="px-6 ml-4">
+              <a href="/round3/Round3b/">
+                Proceed to Telemetry Decoding
+              </a>
+            </Button>
           </div>
         </Card>
       </motion.div>
