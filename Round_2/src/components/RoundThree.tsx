@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
 import { Trophy, Rocket, Star } from 'lucide-react';
 
 export function RoundThree() {
@@ -56,7 +57,17 @@ export function RoundThree() {
 
           <div className="text-center text-slate-400 text-sm pt-4">
             <p>🚀 Ready for your next mission?</p>
-            <p className="text-amber-400 mt-2">Mission Status: SUCCESS</p>
+            <p className="text-amber-400 mt-2 mb-6">Mission Status: SUCCESS</p>
+
+            <div className="flex justify-center">
+              <Button
+                onClick={() => window.location.href = '/round3'}
+                className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 cursor-pointer"
+                size="lg"
+              >
+                Open Round 3 Website
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -10,6 +10,9 @@ app.use(express.static(path.join(__dirname, 'build')));
 // Serve Round_2 at /round2 route
 app.use('/round2', express.static(path.join(__dirname, 'build-round2')));
 
+// Serve Round_3 at /round3 route
+app.use('/round3', express.static(path.join(__dirname, 'build-round3')));
+
 // Download route for mission document
 app.get('/download/mission-document', (req, res) => {
   res.download(path.join(__dirname, 'Mission_Critical_Document.docx'), 'Mission_Critical_Document.docx');
@@ -25,6 +28,11 @@ app.get('/round2*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build-round2', 'index.html'));
 });
 
+// SPA fallback for Round_3
+app.get('/round3*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build-round3', 'index.html'));
+});
+
 // Catch all other routes and serve Round_1 index (for client-side routing)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
@@ -34,4 +42,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   console.log(`📍 Round 1: http://localhost:${PORT}/`);
   console.log(`📍 Round 2: http://localhost:${PORT}/round2`);
+  console.log(`📍 Round 3: http://localhost:${PORT}/round3`);
 });
