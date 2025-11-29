@@ -61,7 +61,10 @@ export function RoundThree() {
 
             <div className="flex justify-center">
               <Button
-                onClick={() => window.location.href = '/round3'}
+                onClick={() => {
+                  sessionStorage.setItem('round3_access_granted', 'true');
+                  window.location.href = '/round3';
+                }}
                 className="w-full max-w-md py-6 text-2xl font-bold rounded-lg transition-all shadow-lg shadow-amber-900/20 bg-amber-500 hover:bg-amber-600 text-slate-900 cursor-pointer"
                 size="lg"
               >

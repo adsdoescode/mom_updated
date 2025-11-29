@@ -153,6 +153,19 @@ export default function App() {
     setShowWarning(false);
   };
 
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+
+  // Check for session access on mount
+  useEffect(() => {
+    const accessGranted = sessionStorage.getItem('round3_access_granted') === 'true';
+    setHasAccess(accessGranted);
+
+    if (!accessGranted) {
+      // Clear any stale data
+      sessionStorage.removeItem('round3_access_granted');
+    }
+  }, []);
+
   // A simple timer tick to update `now` and drive the countdown UI
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);
@@ -167,6 +180,62 @@ export default function App() {
       try { localStorage.removeItem('sleepUntil'); } catch { }
     }
   }, [sleepUntil, now]);
+
+  // Show error if access not granted
+  if (hasAccess === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-pink-100 via-white to-white flex items-center justify-center p-4 font-sans">
+        <div className="max-w-4xl w-full bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+
+          <div className="p-12 flex flex-col items-center">
+
+            {/* Lock Icon */}
+            <div className="mb-8 opacity-20">
+              <Lock className="w-24 h-24 text-slate-400" />
+            </div>
+
+            {/* Title */}
+            <h1 className="text-2xl text-slate-600 tracking-widest mb-4">
+              ACCESS DENIED
+            </h1>
+
+            {/* Subtitle */}
+            <div className="flex items-center gap-2 mb-6">
+              <Lock className="w-4 h-4 text-amber-500" />
+              <span className="text-amber-500 font-bold tracking-wide text-sm">
+                CLEARANCE LEVEL INSUFFICIENT
+              </span>
+            </div>
+
+            {/* Error Code Box */}
+            <div className="w-full max-w-3xl border border-red-200 bg-red-50 rounded p-3 mb-8 text-center">
+              <p className="text-red-500 font-mono text-sm tracking-widest">
+                ERROR CODE: R3_UNAUTHORIZED
+              </p>
+            </div>
+
+            {/* Grey Message Box */}
+            <div className="w-full max-w-4xl bg-slate-500 rounded-lg p-8 mb-8 text-center shadow-inner">
+              <p className="text-slate-300 text-lg">
+                This area is <span className="text-amber-400 font-bold">restricted</span> to authorized personnel only.
+              </p>
+              <p className="text-slate-300 text-lg">
+                Complete Round 2 to gain access credentials.
+              </p>
+            </div>
+
+            {/* Footer Message */}
+            <div className="text-center">
+              <p className="text-slate-400 text-xs flex items-center justify-center gap-2">
+                Nice try, you sneaky lil thing... but you'll need to solve the second mission first! 🕵️
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (unlocked) {
     return <UnlockedScreen />;
