@@ -101,6 +101,15 @@ export default function App() {
   const [now, setNow] = useState(Date.now());
   const [orbitError, setOrbitError] = useState(false);
 
+  const [lockoutCount, setLockoutCount] = useState(() => {
+    try {
+      const saved = localStorage.getItem('lockoutCount');
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
   const handleSubmit = (sensor: string) => {
     if (sensor === 'D') {
       setShowPasscode(true);
@@ -112,11 +121,19 @@ export default function App() {
       setAttempts(newAttempts);
 
       if (newAttempts >= 2) {
-        // Lock out for 7 minutes
-        const lockDurationMs = 7 * 60 * 1000; // 7 minutes
+        // Increment lockout count
+        const newLockoutCount = lockoutCount + 1;
+        setLockoutCount(newLockoutCount);
+        localStorage.setItem('lockoutCount', String(newLockoutCount));
+
+        // Calculate duration: 2 minutes * lockout count
+        const lockDurationMinutes = newLockoutCount * 2;
+        const lockDurationMs = lockDurationMinutes * 60 * 1000;
+
         const until = Date.now() + lockDurationMs;
         setSleepUntil(until);
         try { localStorage.setItem('sleepUntil', String(until)); } catch { }
+
         // Reset UI selection and passcode entry during lock
         setSelectedSensor(null);
         setShowPasscode(false);
@@ -164,6 +181,17 @@ export default function App() {
       // Clear any stale data
       sessionStorage.removeItem('round3_access_granted');
     }
+  }, []);
+
+  // Disable right-click
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
   }, []);
 
   // A simple timer tick to update `now` and drive the countdown UI

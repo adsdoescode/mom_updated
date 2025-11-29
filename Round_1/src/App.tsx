@@ -20,12 +20,12 @@ export default function App() {
   useEffect(() => {
     const savedStartTime = sessionStorage.getItem(TIMER_STORAGE_KEY);
     const accessGranted = sessionStorage.getItem(TIMER_ACCESS_KEY) === 'true';
-    
+
     if (savedStartTime && accessGranted) {
       const startTime = parseInt(savedStartTime, 10);
       const elapsed = Date.now() - startTime;
       const remaining = TIMER_DURATION - elapsed;
-      
+
       if (remaining > 0) {
         setTimerStarted(true);
         setTimeRemaining(remaining);
@@ -36,6 +36,17 @@ export default function App() {
         sessionStorage.removeItem(TIMER_ACCESS_KEY);
       }
     }
+  }, []);
+
+  // Disable right-click
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
   }, []);
 
   // Update timer countdown
@@ -117,16 +128,16 @@ export default function App() {
           <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 mb-8">
             <TabsTrigger value="briefing">Briefing Video</TabsTrigger>
             <TabsTrigger value="rules">Rules & Protocol</TabsTrigger>
-            <TabsTrigger 
-              value="incident" 
+            <TabsTrigger
+              value="incident"
               disabled={!canAccessRestrictedPages}
               className={!canAccessRestrictedPages ? 'opacity-50 cursor-not-allowed' : ''}
             >
               Incident Report
               {!canAccessRestrictedPages && <span className="ml-2 text-xs">🔒</span>}
             </TabsTrigger>
-            <TabsTrigger 
-              value="document" 
+            <TabsTrigger
+              value="document"
               disabled={!canAccessRestrictedPages}
               className={!canAccessRestrictedPages ? 'opacity-50 cursor-not-allowed' : ''}
             >
@@ -140,7 +151,7 @@ export default function App() {
           </TabsContent>
 
           <TabsContent value="rules">
-            <RulesPresentation 
+            <RulesPresentation
               timerStarted={timerStarted}
               timeRemaining={timeRemaining}
               timerExpired={timerExpired}
