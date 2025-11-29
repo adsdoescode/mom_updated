@@ -101,15 +101,6 @@ export default function App() {
   const [now, setNow] = useState(Date.now());
   const [orbitError, setOrbitError] = useState(false);
 
-  const [lockoutCount, setLockoutCount] = useState(() => {
-    try {
-      const saved = localStorage.getItem('lockoutCount');
-      return saved ? parseInt(saved, 10) : 0;
-    } catch {
-      return 0;
-    }
-  });
-
   const handleSubmit = (sensor: string) => {
     if (sensor === 'D') {
       setShowPasscode(true);
@@ -121,19 +112,11 @@ export default function App() {
       setAttempts(newAttempts);
 
       if (newAttempts >= 2) {
-        // Increment lockout count
-        const newLockoutCount = lockoutCount + 1;
-        setLockoutCount(newLockoutCount);
-        localStorage.setItem('lockoutCount', String(newLockoutCount));
-
-        // Calculate duration: 2 minutes * lockout count
-        const lockDurationMinutes = newLockoutCount * 2;
-        const lockDurationMs = lockDurationMinutes * 60 * 1000;
-
+        // Lock out for 5 minutes
+        const lockDurationMs = 5 * 60 * 1000; // 5 minutes
         const until = Date.now() + lockDurationMs;
         setSleepUntil(until);
         try { localStorage.setItem('sleepUntil', String(until)); } catch { }
-
         // Reset UI selection and passcode entry during lock
         setSelectedSensor(null);
         setShowPasscode(false);
