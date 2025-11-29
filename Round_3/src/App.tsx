@@ -208,10 +208,10 @@ export default function App() {
             </div>
 
             {/* Error Code Box */}
-            <div className="w-full max-w-3xl border border-red-200 bg-red-50 rounded p-3 mb-8 text-center">
-              <p className="text-red-500 font-mono text-sm tracking-widest">
+            <div className="w-full max-w-3xl mb-8">
+              <div className="relative w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 text-center font-mono tracking-widest uppercase">
                 ERROR CODE: R3_UNAUTHORIZED
-              </p>
+              </div>
             </div>
 
             {/* Grey Message Box */}
