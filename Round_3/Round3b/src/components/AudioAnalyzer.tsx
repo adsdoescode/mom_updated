@@ -21,7 +21,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
   const [userAnswer, setUserAnswer] = useState('');
   const [error, setError] = useState('');
   const [activeFrequency, setActiveFrequency] = useState<number | null>(null);
-  
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -57,7 +57,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
       setIsPlaying(false);
       setError('');
       setActiveFrequency(null);
-      
+
       // Clean up previous audio
       if (audioElementRef.current) {
         audioElementRef.current.pause();
@@ -69,7 +69,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
       if (audioContextRef.current) {
         audioContextRef.current.close();
       }
-      
+
       // Reset refs
       audioElementRef.current = null;
       audioContextRef.current = null;
@@ -114,7 +114,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
         // Set the source after connecting to avoid issues
         const objectURL = URL.createObjectURL(audioFile);
         audio.src = objectURL;
-        
+
         // Load the audio
         await audio.load();
       }
@@ -131,7 +131,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
         if (audioContextRef.current?.state === 'suspended') {
           await audioContextRef.current.resume();
         }
-        
+
         await audioElementRef.current.play();
         setIsPlaying(true);
         visualize();
@@ -156,7 +156,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
     for (const target of TARGET_FREQUENCIES) {
       const targetFreq = target.freq;
       const binIndex = Math.round((targetFreq / nyquist) * bufferLength);
-      
+
       // Check a wider range around the target frequency (±5 bins for better tolerance)
       let sum = 0;
       let count = 0;
@@ -228,10 +228,10 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
       TARGET_FREQUENCIES.forEach(target => {
         const waveData = waveformDataRef.current.get(target.freq)!;
         const isActive = dominantFreq === target.freq;
-        
+
         // Shift data left
         waveData.shift();
-        
+
         // Add new peak value based on activity
         if (isActive) {
           const amplitude = 0.7 + Math.random() * 0.3; // High amplitude with variation
@@ -245,16 +245,16 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
 
       // Draw each frequency track
       const trackHeight = graphHeight / TARGET_FREQUENCIES.length;
-      
+
       TARGET_FREQUENCIES.forEach((target, index) => {
         const isActive = dominantFreq === target.freq;
         const trackY = topMargin + index * trackHeight;
         const centerY = trackY + trackHeight / 2;
-        
+
         // Draw track background
         ctx.fillStyle = '#0f1729';
         ctx.fillRect(leftMargin, trackY, graphWidth, trackHeight);
-        
+
         // Draw horizontal separator
         if (index > 0) {
           ctx.strokeStyle = '#1e293b';
@@ -278,23 +278,23 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
         // Draw waveform
         const waveData = waveformDataRef.current.get(target.freq)!;
         const waveAmplitude = trackHeight * 0.4;
-        
+
         // Glow effect for active waveform
         if (isActive) {
           ctx.shadowColor = target.color;
           ctx.shadowBlur = 20;
         }
-        
+
         // Draw the waveform line
         ctx.strokeStyle = isActive ? target.color : target.color + '66';
         ctx.lineWidth = isActive ? 3 : 2;
         ctx.beginPath();
-        
+
         for (let i = 0; i < waveData.length; i++) {
           const x = leftMargin + (i / waveData.length) * graphWidth;
           const amplitude = waveData[i] * waveAmplitude;
           const y = centerY - amplitude;
-          
+
           if (i === 0) {
             ctx.moveTo(x, y);
           } else {
@@ -302,20 +302,20 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
           }
         }
         ctx.stroke();
-        
+
         // Draw filled area under waveform
         if (isActive) {
           const gradient = ctx.createLinearGradient(0, centerY - waveAmplitude, 0, centerY);
           gradient.addColorStop(0, target.color + '66');
           gradient.addColorStop(1, target.color + '11');
           ctx.fillStyle = gradient;
-          
+
           ctx.beginPath();
           for (let i = 0; i < waveData.length; i++) {
             const x = leftMargin + (i / waveData.length) * graphWidth;
             const amplitude = waveData[i] * waveAmplitude;
             const y = centerY - amplitude;
-            
+
             if (i === 0) {
               ctx.moveTo(x, centerY);
               ctx.lineTo(x, y);
@@ -327,7 +327,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
           ctx.closePath();
           ctx.fill();
         }
-        
+
         ctx.shadowBlur = 0;
 
         // Draw frequency label on the left
@@ -348,7 +348,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
           ctx.beginPath();
           ctx.arc(leftMargin - 50, centerY, pulseSize, 0, Math.PI * 2);
           ctx.fill();
-          
+
           ctx.strokeStyle = target.color;
           ctx.lineWidth = 2;
           ctx.beginPath();
@@ -458,7 +458,7 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
               <span className="text-cyan-400">880 Hz</span> → Valles Deep
             </div>
             <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 rounded-full" style={{backgroundColor: '#f97316'}}></span>
+              <span className="inline-block w-3 h-3 rounded-full" style={{ backgroundColor: '#f97316' }}></span>
               <span className="text-cyan-400">990 Hz</span> → Red Storm Sector
             </div>
           </div>
@@ -506,11 +506,6 @@ export function AudioAnalyzer({ onAnswerSubmit, trialsRemaining }: AudioAnalyzer
           >
             🚀 SUBMIT ANSWER
           </button>
-        </div>
-
-        {/* Hint */}
-        <div className="bg-cyan-950/30 border border-cyan-500/30 rounded p-3 text-xs text-gray-400">
-          <p>💡 <span className="text-cyan-400">Hint:</span> Play the entire audio file and observe which waveform has the highest peaks most frequently. That's where the beacon is located!</p>
         </div>
 
         {/* Debug Info */}

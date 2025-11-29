@@ -50,7 +50,7 @@ const QUESTIONS: Question[] = [
   }
 ];
 
-const TIME_LIMIT = 50; // 50 seconds
+const TIME_LIMIT = 45; // 50 seconds
 const MAX_ATTEMPTS = 2;
 
 export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
@@ -157,13 +157,13 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
           </p>
           <div className="bg-black/30 rounded-lg p-6 max-w-2xl mx-auto">
             <p className="text-lg mb-2">
-              <span className="text-yellow-300">Attempts Remaining:</span> 
+              <span className="text-yellow-300">Attempts Remaining:</span>
               <span className={`text-3xl ml-3 ${attemptsRemaining === 1 ? 'text-yellow-400' : 'text-red-400'}`}>
                 {attemptsRemaining}
               </span>
             </p>
             <p className="text-sm text-gray-300 mt-3">
-              {attemptsRemaining > 0 
+              {attemptsRemaining > 0
                 ? 'Review the questions carefully and try again!'
                 : 'You have used all your attempts. Returning to mission briefing with cooldown...'
               }
@@ -207,9 +207,8 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
               </div>
             </div>
             {/* Timer */}
-            <div className={`flex items-center gap-3 bg-black/40 border-2 ${
-              timeRemaining <= 10 ? 'border-red-500' : timeRemaining <= 25 ? 'border-yellow-500' : 'border-green-500'
-            } rounded-lg px-6 py-3`}>
+            <div className={`flex items-center gap-3 bg-black/40 border-2 ${timeRemaining <= 10 ? 'border-red-500' : timeRemaining <= 25 ? 'border-yellow-500' : 'border-green-500'
+              } rounded-lg px-6 py-3`}>
               <Clock className={timeColor} size={32} />
               <div className="text-center">
                 <div className="text-xs text-gray-400">TIME LEFT</div>
@@ -223,8 +222,8 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
       {/* Questions */}
       <div className="space-y-4">
         {QUESTIONS.map((question, qIndex) => (
-          <div 
-            key={question.id} 
+          <div
+            key={question.id}
             className="bg-gradient-to-br from-blue-950/30 to-purple-950/30 border-2 border-cyan-500/30 rounded-lg p-6"
           >
             <div className="flex items-start gap-3 mb-4">
@@ -234,26 +233,24 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
               <div className="flex-1">
                 <div className="text-xs text-purple-400 mb-2">🔹 {question.category}</div>
                 <h3 className="text-lg text-white mb-4">{question.question}</h3>
-                
+
                 <div className="space-y-2">
                   {question.options.map((option, oIndex) => {
                     const isSelected = answers[qIndex] === oIndex;
-                    
+
                     return (
                       <button
                         key={oIndex}
                         onClick={() => handleAnswerSelect(qIndex, oIndex)}
                         disabled={isSubmitted || hasTimedOut}
-                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                          isSelected
+                        className={`w-full text-left p-4 rounded-lg border-2 transition-all ${isSelected
                             ? 'bg-cyan-600/30 border-cyan-400 text-white'
                             : 'bg-black/20 border-gray-600 text-gray-300 hover:border-cyan-500/50 hover:bg-cyan-950/20'
-                        } ${(isSubmitted || hasTimedOut) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                          } ${(isSubmitted || hasTimedOut) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                            isSelected ? 'border-cyan-400 bg-cyan-600' : 'border-gray-500'
-                          }`}>
+                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${isSelected ? 'border-cyan-400 bg-cyan-600' : 'border-gray-500'
+                            }`}>
                             {isSelected && <div className="w-3 h-3 rounded-full bg-white"></div>}
                           </div>
                           <span className="flex-1">{option}</span>
@@ -273,11 +270,10 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
         <button
           onClick={handleSubmit}
           disabled={!allAnswered || isSubmitted || hasTimedOut}
-          className={`flex items-center gap-3 px-8 py-4 rounded-lg text-lg transition-all ${
-            allAnswered && !isSubmitted && !hasTimedOut
+          className={`flex items-center gap-3 px-8 py-4 rounded-lg text-lg transition-all ${allAnswered && !isSubmitted && !hasTimedOut
               ? 'bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-500 hover:to-cyan-500 shadow-lg shadow-green-500/50 cursor-pointer'
               : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-          }`}
+            }`}
         >
           {allAnswered ? (
             <>
@@ -296,7 +292,7 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
       {/* Instructions */}
       <div className="bg-yellow-950/30 border border-yellow-500/50 rounded-lg p-4 text-center text-sm text-gray-400">
         <p>
-          ⚠️ <span className="text-yellow-400">Note:</span> You must answer all questions correctly to proceed to the mission. 
+          ⚠️ <span className="text-yellow-400">Note:</span> You must answer all questions correctly to proceed to the mission.
           Time limit: 50 seconds | Attempts: {attemptsRemaining}
         </p>
       </div>

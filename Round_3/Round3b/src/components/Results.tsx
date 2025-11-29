@@ -28,6 +28,12 @@ export function Results({ region, onReset, onContinue }: ResultsProps) {
         </div>
       </div>
 
+      <div className="text-center mt-4">
+        <p className="text-red-500 font-bold text-lg animate-pulse">
+          ⚠️ KEEP THIS FREQUENCY SAFE - critical mission clue ⚠️
+        </p>
+      </div>
+
       {/* Map with highlighted region */}
       <MarsMap highlightedRegion={region} />
 

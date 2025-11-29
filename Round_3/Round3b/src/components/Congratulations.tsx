@@ -1,10 +1,23 @@
-import { Sparkles, Trophy, Star, Rocket } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sparkles, Trophy, Star, Rocket, Clock } from 'lucide-react';
 
 interface CongratulationsProps {
   onReset: () => void;
 }
 
 export function Congratulations({ onReset }: CongratulationsProps) {
+  const [completionTime, setCompletionTime] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    const milliseconds = Math.floor(now.getMilliseconds() / 10).toString().padStart(2, '0');
+
+    setCompletionTime(`${hours}:${minutes}:${seconds}.${milliseconds}`);
+  }, []);
+
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       {/* Main Congratulations Banner */}
@@ -25,13 +38,13 @@ export function Congratulations({ onReset }: CongratulationsProps) {
             <Trophy size={80} className="text-yellow-300 animate-bounce" />
             <Rocket size={80} className="text-white animate-pulse" />
           </div>
-          
-          <h1 className="text-5xl mb-4">🎉 CONGRATULATIONS! 🎉</h1>
+
+          <h1 className="text-5xl mb-4">CONGRATULATIONS!</h1>
           <h2 className="text-3xl text-yellow-200 mb-6">MISSION ACCOMPLISHED</h2>
-          
+
           <div className="bg-black/40 backdrop-blur-sm border-2 border-yellow-400 rounded-xl p-8 max-w-3xl mx-auto">
             <p className="text-2xl mb-4">
-              You have successfully completed the <span className="text-cyan-300">Signal Rescue Lite</span> mission!
+              You have successfully completed the <span className="text-cyan-300">Mars Orbiter Mission</span>
             </p>
             <p className="text-xl text-gray-200">
               Your exceptional skills in signal analysis and problem-solving have saved a life on Mars.
@@ -64,7 +77,7 @@ export function Congratulations({ onReset }: CongratulationsProps) {
       {/* Stats Summary */}
       <div className="bg-gradient-to-br from-green-950/50 to-emerald-950/50 border-2 border-green-500/50 rounded-lg p-8">
         <h3 className="text-2xl text-green-400 mb-6 text-center">🌟 MISSION STATISTICS 🌟</h3>
-        <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
           <div className="bg-black/30 rounded-lg p-4 text-center">
             <div className="text-3xl text-yellow-400 mb-2">880 Hz</div>
             <div className="text-sm text-gray-400">Beacon Frequency Detected</div>
@@ -77,9 +90,12 @@ export function Congratulations({ onReset }: CongratulationsProps) {
             <div className="text-3xl text-green-400 mb-2">100%</div>
             <div className="text-sm text-gray-400">Mission Success Rate</div>
           </div>
-          <div className="bg-black/30 rounded-lg p-4 text-center">
-            <div className="text-3xl text-purple-400 mb-2">Elite</div>
-            <div className="text-sm text-gray-400">Operator Status</div>
+          <div className="bg-black/30 rounded-lg p-4 text-center md:col-span-3">
+            <div className="flex items-center justify-center gap-2 text-3xl text-orange-400 mb-2 font-mono">
+              <Clock size={28} />
+              {completionTime}
+            </div>
+            <div className="text-sm text-gray-400">Mission Completion Time</div>
           </div>
         </div>
       </div>
