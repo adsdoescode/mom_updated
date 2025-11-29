@@ -39,7 +39,7 @@ export function UnlockedScreen() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <h1 className="text-5xl mb-4">🎉 ACCESS GRANTED</h1>
+            <h1 className="text-5xl mb-4 text-emerald-300">ACCESS GRANTED</h1>
             <p className="text-2xl text-emerald-300 mb-6">Imposter Identified!</p>
           </motion.div>
 
@@ -58,8 +58,6 @@ export function UnlockedScreen() {
                 <li>Expected range: <span className="text-green-400">900–990 N·m</span></li>
                 <li>Measured range: <span className="text-yellow-400">915–975</span> (appeared correct)</li>
                 <li>The sensor was reporting in <strong>lbf·ft</strong> (pound-force feet) instead of N·m!</li>
-                <li>Verification: Torque = Force × Distance. Thrust (3150 N) × 0.3m = 945 N·m expected</li>
-                <li>But 945 lbf·ft × 1.356 = <span className="text-red-400">1,282 N·m</span> – 35% too high!</li>
                 <li>Clue: "My language is foreign" – hidden hint about imperial units</li>
               </ul>
             </div>
@@ -95,7 +93,7 @@ export function UnlockedScreen() {
           <div className="mt-6 flex justify-center">
             {/* Static file download - place your audio file in public/audio/mission-sucess.wav */}
             <Button asChild variant="default" className="px-6">
-              <a href="/audio/mission-sucess.wav" download>
+              <a href="/round3/audio/mission-sucess.wav" download>
                 Download Mission Audio
               </a>
             </Button>

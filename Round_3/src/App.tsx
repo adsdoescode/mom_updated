@@ -64,9 +64,9 @@ const sensorData = {
   D: {
     name: 'Torque Sensor',
     label: 'Sensor D',
-    clue: 'Gyroscope torque: 900-990 N·m for stabilization. Verify with Sensor A data.',
-    puzzle: 'My numbers match, but my language is foreign. APTITUDE CHALLENGE: A Mars rover wheel experiences 678 N of force and creates 919.37 N·m of torque. Calculate the wheel radius in meters (torque ÷ force). This is your access code.',
-    expectedRange: '900–990 N·m',
+    clue: 'Gyroscope torque: 900-950 N·m for stabilization. Verify with Sensor A data.',
+    puzzle: 'Seek the circle’s secret measure, for without its span, the journey cannot begin. = torque/force',
+    expectedRange: '900–950 N·m',
     graphData: [
       { time: 0, value: 915 },
       { time: 1, value: 945 },
@@ -77,7 +77,7 @@ const sensorData = {
     unit: '',
     description: 'Tracks rotational stabilization force',
     isImposter: true,
-    contradiction: 'Graph shows 900-990 range matching expected N·m, but values are actually in lbf·ft! Converting: 960 lbf·ft × 1.356 = 1,302 N·m (30% too high). Password: SENSOR-D'
+    contradiction: 'Graph shows 900-950 range matching expected N·m, but values are actually in lbf·ft! Converting: 960 lbf·ft × 1.356 = 1,302 N·m (30% too high). Password: SENSOR-D'
   }
 };
 
@@ -99,41 +99,50 @@ export default function App() {
     }
   });
   const [now, setNow] = useState(Date.now());
+  const [orbitError, setOrbitError] = useState(false);
 
   const handleSubmit = (sensor: string) => {
     if (sensor === 'D') {
       setShowPasscode(true);
       setError(false);
       setShowWarning(false);
+      setOrbitError(false);
     } else {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
-      
+
       if (newAttempts >= 2) {
-          // Lock out for 7 minutes
-          const lockDurationMs = 7 * 60 * 1000; // 7 minutes
-          const until = Date.now() + lockDurationMs;
-          setSleepUntil(until);
-        try { localStorage.setItem('sleepUntil', String(until)); } catch {}
+        // Lock out for 7 minutes
+        const lockDurationMs = 7 * 60 * 1000; // 7 minutes
+        const until = Date.now() + lockDurationMs;
+        setSleepUntil(until);
+        try { localStorage.setItem('sleepUntil', String(until)); } catch { }
         // Reset UI selection and passcode entry during lock
         setSelectedSensor(null);
         setShowPasscode(false);
         setPasscode('');
-        } else {
+        setOrbitError(false);
+      } else {
         setShowWarning(true);
         setError(false);
         setShowPasscode(false);
+        setOrbitError(false);
       }
     }
   };
 
   const handlePasscodeSubmit = () => {
-    if (passcode === '1.356') {
+    if (passcode === '0.3') {
       setUnlocked(true);
       setError(false);
+      setOrbitError(false);
     } else {
       setError(true);
-      setTimeout(() => setError(false), 3000);
+      setOrbitError(true);
+      setTimeout(() => {
+        setError(false);
+        setOrbitError(false);
+      }, 3000);
     }
   };
 
@@ -155,7 +164,7 @@ export default function App() {
     if (sleepUntil && sleepUntil <= Date.now()) {
       setSleepUntil(null);
       setAttempts(0);
-      try { localStorage.removeItem('sleepUntil'); } catch {}
+      try { localStorage.removeItem('sleepUntil'); } catch { }
     }
   }, [sleepUntil, now]);
 
@@ -181,7 +190,7 @@ export default function App() {
             <h1 className="text-5xl">🌌 ORBITER DATA VALIDATION</h1>
           </div>
           <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-            Four subsystems are transmitting data from Mars orbit. One sensor contains inconsistent or impossible information. 
+            Four subsystems are transmitting data from Mars orbit. One sensor contains inconsistent or impossible information.
             Identify the <span className="text-red-500">IMPOSTER</span> to proceed.
           </p>
         </div>
@@ -211,7 +220,7 @@ export default function App() {
 
         {/* Submit Section */}
         <Card className="bg-slate-900/50 border-slate-700 p-8">
-          <h2 className="text-2xl mb-4 text-center">Identify the Imposter</h2>
+          <h2 className="text-2xl mb-4 text-center text-white">Identify the Imposter</h2>
           <p className="text-center text-slate-400 mb-6">
             Select the sensor you believe is transmitting faulty data
           </p>
@@ -255,6 +264,19 @@ export default function App() {
               >
                 Verify & Unlock
               </Button>
+            </div>
+          </Card>
+        )}
+
+        {/* Orbit Error Message */}
+        {orbitError && (
+          <Card className="bg-slate-900/50 border-slate-700 p-8 mt-8 animate-in fade-in slide-in-from-bottom-4">
+            <div className="flex flex-col items-center justify-center text-center">
+              <AlertCircle className="size-16 text-red-500 mb-4" />
+              <h2 className="text-4xl font-bold text-red-500 mb-2">WARNING</h2>
+              <p className="text-3xl text-white font-bold">
+                WHEEL GOING OUT OF ORBIT
+              </p>
             </div>
           </Card>
         )}
