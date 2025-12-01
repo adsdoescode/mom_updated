@@ -113,12 +113,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
     setSolved(false);
   };
 
-  const solvePuzzle = () => {
-    if (solved) return;
-    const solvedBoard = createSolvedBoard();
-    setBoard(solvedBoard);
-    setSolved(true);
-  };
+
 
   const handleTileClick = (index: number) => {
     if (solved) return;
@@ -306,14 +301,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
                 >
                   Reset Puzzle
                 </Button>
-                <Button
-                  onClick={solvePuzzle}
-                  disabled={solved}
-                  className="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-4 disabled:opacity-50 disabled:cursor-not-allowed"
-                  size="sm"
-                >
-                  Solve Puzzle
-                </Button>
+
                 <Button
                   onClick={() => setShowHint((h) => !h)}
                   className={`font-semibold px-4 transition-colors ${showHint
