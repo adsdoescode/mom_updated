@@ -389,6 +389,14 @@ Coordinates locked for Mars mission
             onChange={(e) => setCode(e.target.value)}
             className="w-full bg-black p-4 rounded font-mono text-sm text-green-400 border border-slate-700 focus:border-amber-500 focus:outline-none resize-none"
             spellCheck={false}
+            onCopy={(e) => e.preventDefault()}
+            onCut={(e) => e.preventDefault()}
+            onPaste={(e) => e.preventDefault()}
+            onKeyDown={(e) => {
+              if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+                e.preventDefault();
+              }
+            }}
             style={{ tabSize: 4, lineHeight: '1.5', height: '2500px' }}
           />
           <div className="mt-4 flex gap-3">
