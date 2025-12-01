@@ -15,6 +15,7 @@ export default function App() {
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   const [timeRemaining, setTimeRemaining] = useState<number>(TIMER_DURATION);
   const [timerExpired, setTimerExpired] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>("briefing");
 
   // Load timer state from sessionStorage on mount (persists on reload, clears on new session)
   useEffect(() => {
@@ -48,6 +49,11 @@ export default function App() {
       document.removeEventListener('contextmenu', handleContextMenu);
     };
   }, []);
+
+  // Scroll to top on mount and tab change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
 
   // Update timer countdown
   useEffect(() => {
@@ -124,7 +130,7 @@ export default function App() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <Tabs defaultValue="briefing" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-4 bg-slate-800/50 mb-8">
             <TabsTrigger value="briefing">Briefing Video</TabsTrigger>
             <TabsTrigger value="rules">Rules & Protocol</TabsTrigger>

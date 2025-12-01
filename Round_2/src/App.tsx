@@ -49,6 +49,11 @@ export default function App() {
     };
   }, []);
 
+  // Scroll to top on mount and stage change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStage]);
+
   // Show error if access not granted
   if (hasAccess === false) {
     return (

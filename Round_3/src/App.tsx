@@ -177,6 +177,11 @@ export default function App() {
     };
   }, []);
 
+  // Scroll to top on mount and state changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [selectedSensor, showWarning, unlocked, orbitError]);
+
   // A simple timer tick to update `now` and drive the countdown UI
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000);

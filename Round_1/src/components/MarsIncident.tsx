@@ -137,7 +137,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
     if (correctAccessCode === null) {
       // Quiz not completed correctly yet
       const notification = document.createElement('div');
-      notification.textContent = quizAttemptCount === 0 
+      notification.textContent = quizAttemptCount === 0
         ? '✗ Please complete the quiz first'
         : '✗ Please enter valid access code';
       notification.className = 'fixed bottom-4 right-4 bg-amber-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-in fade-in slide-in-from-bottom-5';
@@ -169,8 +169,8 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
   };
 
   if (showQuiz) {
-    return <Quiz 
-      onClose={() => setShowQuiz(false)} 
+    return <Quiz
+      onClose={() => setShowQuiz(false)}
       onAllCorrect={(accessCode) => {
         setQuizCompletedCorrectly(true);
         setCorrectAccessCode(accessCode);
@@ -222,8 +222,8 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               <div>
                 <h3 className="text-red-400 mb-2">Mission Summary</h3>
                 <p className="text-sm leading-relaxed">
-                  The Mars Climate Orbiter was launched on December 11, 1998, as part of NASA's 
-                  Mars Surveyor program. Its primary objective was to serve as a communications 
+                  The Mars Climate Orbiter was launched on December 11, 1998, as part of NASA's
+                  Mars Surveyor program. Its primary objective was to serve as a communications
                   relay for the Mars Polar Lander and to study the Martian atmosphere and surface.
                 </p>
               </div>
@@ -231,9 +231,9 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               <div>
                 <h3 className="text-red-400 mb-2">The Incident</h3>
                 <p className="text-sm leading-relaxed">
-                  Contact was lost on September 23, 1999, as the spacecraft prepared to enter 
-                  orbit around Mars. Post-incident analysis revealed the orbiter approached Mars 
-                  at an altitude of only 57 kilometers instead of the planned 140-150 kilometers, 
+                  Contact was lost on September 23, 1999, as the spacecraft prepared to enter
+                  orbit around Mars. Post-incident analysis revealed the orbiter approached Mars
+                  at an altitude of only 57 kilometers instead of the planned 140-150 kilometers,
                   causing it to enter the atmosphere and disintegrate.
                 </p>
               </div>
@@ -293,7 +293,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   <div className="space-y-2 text-sm text-slate-300">
                     <div className="flex justify-between">
                       <span className="text-slate-400">Planned Altitude:</span>
-                      <span 
+                      <span
                         className="cursor-pointer hover:text-amber-400 transition-colors"
                         onClick={() => handleHiddenClick('altitude', 'METRIC2IMPERIAL')}
                         title="Click for more details"
@@ -321,7 +321,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               <div className="p-4 bg-amber-900/10 rounded-lg border border-amber-700/30">
                 <p className="text-sm text-amber-200">
                   <AlertTriangle className="w-4 h-4 inline mr-2" />
-                  The discrepancy in altitude calculations suggests a fundamental error in 
+                  The discrepancy in altitude calculations suggests a fundamental error in
                   the navigation software. Investigation ongoing...
                 </p>
               </div>
@@ -359,12 +359,12 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   <h4 className="text-red-400 mb-3">Navigation Data Anomalies</h4>
                   <div className="text-sm text-slate-300 space-y-2">
                     <p>
-                      Multiple trajectory corrections were required throughout the mission. 
+                      Multiple trajectory corrections were required throughout the mission.
                       Ground control noted increasing deviations from predicted path.
                     </p>
                     <p className="text-amber-400">
                       ⚠ Thruster force data showed{' '}
-                      <span 
+                      <span
                         className="underline decoration-dotted cursor-help"
                         title="Units discrepancy detected"
                       >
@@ -414,12 +414,11 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                 ].map((item, index) => (
                   <div key={index} className="flex gap-4">
                     <div className="flex flex-col items-center">
-                      <div className={`w-4 h-4 rounded-full ${
-                        item.status === 'success' ? 'bg-green-500' :
-                        item.status === 'warning' ? 'bg-amber-500' :
-                        item.status === 'error' ? 'bg-red-500' :
-                        'bg-blue-500'
-                      }`} />
+                      <div className={`w-4 h-4 rounded-full ${item.status === 'success' ? 'bg-green-500' :
+                          item.status === 'warning' ? 'bg-amber-500' :
+                            item.status === 'error' ? 'bg-red-500' :
+                              'bg-blue-500'
+                        }`} />
                       {index < 4 && <div className="w-0.5 h-full bg-slate-700 mt-2" />}
                     </div>
                     <div className="flex-1 pb-6">
@@ -453,21 +452,21 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                 <MapPin className="w-5 h-5 text-red-400 mt-1 flex-shrink-0" />
                 <div className="text-sm text-slate-300 space-y-2">
                   <p>
-                    <span className="text-red-400">Key Finding:</span> The spacecraft's 
+                    <span className="text-red-400">Key Finding:</span> The spacecraft's
                     navigation software calculated trajectory corrections using{' '}
                     <span className="text-amber-400 cursor-pointer hover:underline"
-                          onClick={() => handleHiddenClick('units', 'METRIC2IMPERIAL')}>
+                      onClick={() => handleHiddenClick('units', 'METRIC2IMPERIAL')}>
                       metric units (Newtons)
                     </span>, while the ground-based software provided thruster data in{' '}
                     <span className="text-amber-400">imperial units (pound-force)</span>.
                   </p>
                   <p>
-                    This units mismatch went undetected throughout the mission, causing 
-                    a cumulative navigation error that resulted in the spacecraft approaching 
+                    This units mismatch went undetected throughout the mission, causing
+                    a cumulative navigation error that resulted in the spacecraft approaching
                     Mars at an altitude far lower than planned.
                   </p>
                   <p className="text-red-400">
-                    The failure to detect and correct this error represents a critical 
+                    The failure to detect and correct this error represents a critical
                     breakdown in quality assurance and verification processes.
                   </p>
                   <button
@@ -549,7 +548,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
               <div className="p-4 bg-slate-900/50 rounded-lg border border-slate-700/50 opacity-50 hover:opacity-100 transition-opacity">
                 <p className="text-xs text-slate-500 font-mono">
                   Debug Log [ID: MCO-1999-092399] | Verification Code:{' '}
-                  <span 
+                  <span
                     className="text-slate-600 cursor-pointer select-all"
                     onClick={() => handleCopyToClipboard('METRIC2IMPERIAL', 'debug')}
                   >

@@ -43,12 +43,17 @@ export default function App() {
     return () => clearInterval(timer);
   }, [isInBuffer]);
 
+  // Scroll to top on game state changes
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [gameStarted, quizPassed, quizFailed, showHardwareConsole, showCongratulations, isCorrect]);
+
   const handleAnswerSubmit = (answer: string) => {
     setUserAnswer(answer);
     // Check if answer is "Valles Deep" (case insensitive)
     const correct = answer.toLowerCase().trim() === 'valles deep';
     setIsCorrect(correct);
-    
+
     // Decrement trials if wrong
     if (!correct) {
       setTrialsRemaining(prev => prev - 1);
@@ -115,13 +120,13 @@ export default function App() {
         {!hasAccess ? (
           <AccessGate onAccessGranted={handleAccessGranted} />
         ) : !gameStarted ? (
-          <MissionBriefing 
-            onStart={() => setGameStarted(true)} 
+          <MissionBriefing
+            onStart={() => setGameStarted(true)}
             isInBuffer={isInBuffer}
             bufferTimeRemaining={bufferTimeRemaining}
           />
         ) : !quizPassed && !quizFailed ? (
-          <Quiz 
+          <Quiz
             onPass={handleQuizPass}
             onFail={handleQuizFail}
             onFailedAllAttempts={handleQuizFailedAllAttempts}
@@ -156,8 +161,8 @@ export default function App() {
             ) : isCorrect === null ? (
               <div className="grid lg:grid-cols-2 gap-8">
                 <div className="lg:col-span-1">
-                  <AudioAnalyzer 
-                    onAnswerSubmit={handleAnswerSubmit} 
+                  <AudioAnalyzer
+                    onAnswerSubmit={handleAnswerSubmit}
                     trialsRemaining={trialsRemaining}
                   />
                 </div>
@@ -166,13 +171,13 @@ export default function App() {
                 </div>
               </div>
             ) : isCorrect ? (
-              <Results 
-                region="Valles Deep" 
+              <Results
+                region="Valles Deep"
                 onReset={handleReset}
                 onContinue={handleShowHardwareConsole}
               />
             ) : trialsRemaining > 0 ? (
-              <WrongAnswer 
+              <WrongAnswer
                 userAnswer={userAnswer!}
                 trialsRemaining={trialsRemaining}
                 onTryAgain={() => {
@@ -182,10 +187,10 @@ export default function App() {
                 onReset={handleReset}
               />
             ) : (
-              <WrongAnswer 
+              <WrongAnswer
                 userAnswer={userAnswer!}
                 trialsRemaining={0}
-                onTryAgain={() => {}}
+                onTryAgain={() => { }}
                 onReset={handleReset}
               />
             )}
