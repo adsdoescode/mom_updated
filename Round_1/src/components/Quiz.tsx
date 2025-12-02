@@ -248,6 +248,26 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
   const [answers, setAnswers] = useState<OptionLetter[]>(new Array(questions.length).fill(null));
   const [showRules, setShowRules] = useState(true);
 
+  // Shuffle options on mount
+  const [shuffledIndices] = useState<number[][]>(() => {
+    return questions.map(() => {
+      const indices = [0, 1, 2, 3];
+      for (let i = indices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indices[i], indices[j]] = [indices[j], indices[i]];
+      }
+      return indices;
+    });
+  });
+
+  const checkCorrectness = (qIndex: number, selectedLetter: OptionLetter | null) => {
+    if (!selectedLetter) return false;
+    const selectedIndex = OPTION_CODE[selectedLetter] - 1;
+    const originalIndex = shuffledIndices[qIndex][selectedIndex];
+    const originalLetter = ['A', 'B', 'C', 'D'][originalIndex] as OptionLetter;
+    return verifyAnswer(questions[qIndex].id, originalLetter, ANSWER_KEYS[qIndex]);
+  };
+
   const handleAnswerSelect = (questionIndex: number, optionIndex: number) => {
     if (!submitted) {
       const optionLetters: OptionLetter[] = ['A', 'B', 'C', 'D'];
@@ -258,8 +278,8 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
   };
 
   const allAnswersCorrect = () => {
-    return questions.every((question, index) => {
-      return answers[index] !== null && verifyAnswer(question.id, answers[index], ANSWER_KEYS[index]);
+    return questions.every((_, index) => {
+      return answers[index] !== null && checkCorrectness(index, answers[index]);
     });
   };
 
@@ -283,9 +303,9 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
 
   const calculateAccessCode = () => {
     let code = 0;
-    questions.forEach((question, index) => {
+    questions.forEach((_, index) => {
       // Use obfuscated answer verification
-      if (answers[index] && verifyAnswer(question.id, answers[index], ANSWER_KEYS[index])) {
+      if (answers[index] && checkCorrectness(index, answers[index])) {
         code += OPTION_CODE[answers[index]];
       }
     });
@@ -326,12 +346,13 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
           <div key={question.id} className="question-block">
             <h3>{question.id}. {question.question}</h3>
             <div className="options">
-              {question.options.map((option, optionIndex) => {
+              {shuffledIndices[questionIndex].map((originalIndex, optionIndex) => {
+                const option = question.options[originalIndex];
                 const optionLetters: OptionLetter[] = ['A', 'B', 'C', 'D'];
                 const optionLetter = optionLetters[optionIndex];
                 const isSelected = answers[questionIndex] === optionLetter;
                 // Use obfuscated answer verification instead of direct comparison
-                const isCorrect = submitted ? verifyAnswer(question.id, optionLetter, ANSWER_KEYS[questionIndex]) : false;
+                const isCorrect = submitted ? checkCorrectness(questionIndex, optionLetter) : false;
                 let className = 'option';
 
                 if (submitted) {

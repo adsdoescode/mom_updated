@@ -364,12 +364,14 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                     </p>
                     <p className="text-amber-400">
                       ⚠ Thruster force data showed{' '}
-                      <span
-                        className="underline decoration-dotted cursor-help"
+                      <a
+                        href="/code_answer.jpeg"
+                        download
+                        className="underline decoration-dotted cursor-help text-amber-400 hover:text-amber-300"
                         title="Units discrepancy detected"
                       >
                         inconsistencies
-                      </span>
+                      </a>
                       {' '}between calculated and expected values.
                     </p>
                   </div>
