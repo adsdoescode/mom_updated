@@ -89,6 +89,8 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
   const [feedback, setFeedback] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [puzzleStartTime, setPuzzleStartTime] = useState<number | null>(null);
+  const [showSolveButton, setShowSolveButton] = useState(false);
 
   useEffect(() => {
     const img = new window.Image();
@@ -106,6 +108,31 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
     };
     img.onerror = () => setImageLoadError(true);
   }, [isCompleted]);
+
+  // Track time spent on puzzle screen and show solve button after 37 minutes
+  useEffect(() => {
+    if (quizPassed && !solved && !isCompleted) {
+      // Start the timer when the user first sees the puzzle
+      if (puzzleStartTime === null) {
+        setPuzzleStartTime(Date.now());
+      }
+
+      // Check every second if 33 minutes have elapsed
+      const interval = setInterval(() => {
+        if (puzzleStartTime !== null) {
+          const elapsedTime = Date.now() - puzzleStartTime;
+          const THIRTY_SEVEN_MINUTES = 33 * 60 * 1000; // 33 minutes in milliseconds
+
+          if (elapsedTime >= THIRTY_SEVEN_MINUTES) {
+            setShowSolveButton(true);
+            clearInterval(interval);
+          }
+        }
+      }, 1000); // Check every second
+
+      return () => clearInterval(interval);
+    }
+  }, [quizPassed, solved, isCompleted, puzzleStartTime]);
 
   const handleShuffle = () => {
     setBoard(shuffleBoard(createSolvedBoard()));
@@ -129,6 +156,11 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
       setMoves((m) => m + 1);
       if (isSolved(newBoard)) setSolved(true);
     }
+  };
+
+  const handleSolvePuzzle = () => {
+    setBoard(createSolvedBoard());
+    setSolved(true);
   };
 
   const getTileStyle = (tile: number) => {
@@ -312,6 +344,16 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
                 >
                   {showHint ? "Hide Hint" : "Show Hint"}
                 </Button>
+
+                {showSolveButton && (
+                  <Button
+                    onClick={handleSolvePuzzle}
+                    className="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4"
+                    size="sm"
+                  >
+                    Solve Puzzle
+                  </Button>
+                )}
               </div>
             )}
 

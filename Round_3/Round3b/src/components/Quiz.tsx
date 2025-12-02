@@ -244,8 +244,8 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
                         onClick={() => handleAnswerSelect(qIndex, oIndex)}
                         disabled={isSubmitted || hasTimedOut}
                         className={`w-full text-left p-4 rounded-lg border-2 transition-all ${isSelected
-                            ? 'bg-cyan-600/30 border-cyan-400 text-white'
-                            : 'bg-black/20 border-gray-600 text-gray-300 hover:border-cyan-500/50 hover:bg-cyan-950/20'
+                          ? 'bg-cyan-600/30 border-cyan-400 text-white'
+                          : 'bg-black/20 border-gray-600 text-gray-300 hover:border-cyan-500/50 hover:bg-cyan-950/20'
                           } ${(isSubmitted || hasTimedOut) ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
                       >
                         <div className="flex items-center gap-3">
@@ -271,8 +271,8 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
           onClick={handleSubmit}
           disabled={!allAnswered || isSubmitted || hasTimedOut}
           className={`flex items-center gap-3 px-8 py-4 rounded-lg text-lg transition-all ${allAnswered && !isSubmitted && !hasTimedOut
-              ? 'bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-500 hover:to-cyan-500 shadow-lg shadow-green-500/50 cursor-pointer'
-              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+            ? 'bg-gradient-to-r from-green-600 to-cyan-600 hover:from-green-500 hover:to-cyan-500 shadow-lg shadow-green-500/50 cursor-pointer'
+            : 'bg-gray-700 text-gray-500 cursor-not-allowed'
             }`}
         >
           {allAnswered ? (
@@ -293,7 +293,7 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
       <div className="bg-yellow-950/30 border border-yellow-500/50 rounded-lg p-4 text-center text-sm text-gray-400">
         <p>
           ⚠️ <span className="text-yellow-400">Note:</span> You must answer all questions correctly to proceed to the mission.
-          Time limit: 50 seconds | Attempts: {attemptsRemaining}
+          Time limit: 45 seconds | Attempts: {attemptsRemaining}
         </p>
       </div>
     </div>

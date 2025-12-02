@@ -19,6 +19,8 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
   const [isValidating, setIsValidating] = useState(false);
   const [error, setError] = useState('');
   const [timeRemaining, setTimeRemaining] = useState(420); // 7 minutes
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [isLocked, setIsLocked] = useState(false);
   const [draggedWire, setDraggedWire] = useState<string | null>(null);
   const [wires, setWires] = useState<WireConnection[]>([
     { id: 'red-led', color: '#ef4444', currentPin: '5V', correctPin: 'D4', label: 'Red LED (Retrograde)' },
@@ -77,6 +79,10 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
       return;
     }
 
+    if (isLocked) {
+      return;
+    }
+
     setIsValidating(true);
     setError('');
 
@@ -84,7 +90,15 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
       if (enteredCode === CORRECT_CODE) {
         onComplete();
       } else {
-        setError('❌ INCORRECT CODE - Check the OLED display on the hardware');
+        const newFailedAttempts = failedAttempts + 1;
+        setFailedAttempts(newFailedAttempts);
+
+        if (newFailedAttempts >= 3) {
+          setIsLocked(true);
+          setError('🚨 SYSTEM LOCKED - MAXIMUM ATTEMPTS EXCEEDED');
+        } else {
+          setError(`❌ INCORRECT CODE - ${3 - newFailedAttempts} attempt(s) remaining`);
+        }
         setIsValidating(false);
       }
     }, 1500);
@@ -119,6 +133,27 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
+      {/* MISSION FAILED Overlay */}
+      {isLocked && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm">
+          <div className="text-center space-y-6 animate-pulse">
+            <div className="text-8xl font-bold text-red-600 drop-shadow-[0_0_50px_rgba(220,38,38,0.8)]">
+              MISSION FAILED
+            </div>
+            <div className="text-3xl text-red-400">
+              🚨 SYSTEM LOCKOUT INITIATED 🚨
+            </div>
+            <div className="text-xl text-gray-300 max-w-2xl mx-auto px-4">
+              Access code verification failed twice. The orbiter's security protocol has been triggered.
+              All systems are now permanently locked.
+            </div>
+            <div className="text-lg text-red-500 font-bold">
+              IMMEDIATE ELIMINATION FROM MISSION
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mission Header */}
       <div className="bg-gradient-to-r from-red-900/50 via-orange-900/50 to-red-900/50 border-2 border-red-500 rounded-xl p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48cGF0dGVybiBpZD0iZ3JpZCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDQwIDAgTCAwIDAgMCA0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] opacity-20"></div>
@@ -403,52 +438,64 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
                   maxLength={1}
                   value={digit}
                   onChange={(e) => handleCodeInput(index, e.target.value)}
-                  className={`w-16 h-20 text-center text-3xl bg-gray-900 border-2 rounded-lg focus:outline-none transition-all ${allWiresCorrect && !isTimedOut
+                  className={`w-16 h-20 text-center text-3xl bg-gray-900 border-2 rounded-lg focus:outline-none transition-all ${allWiresCorrect && !isTimedOut && !isLocked
                     ? 'border-cyan-600 focus:border-orange-400 focus:shadow-[0_0_20px_rgba(251,146,60,0.5)]'
                     : 'border-gray-700 text-gray-600 cursor-not-allowed'
                     }`}
-                  disabled={isValidating || !allWiresCorrect || isTimedOut}
+                  disabled={isValidating || !allWiresCorrect || isTimedOut || isLocked}
                   placeholder="?"
                 />
               ))}
             </div>
-          </div>
 
-          {error && (
-            <div className="flex items-center gap-2 text-red-400 bg-red-900/30 border border-red-600/50 rounded-lg p-4">
-              <AlertTriangle size={20} />
-              <span>{error}</span>
+            {/* Warning Message */}
+            <div className="bg-red-900/40 border-2 border-red-500 rounded-lg p-6 shadow-lg shadow-red-900/50">
+              <p className="text-red-200 text-xl font-bold text-center leading-relaxed">
+                ⚠️ BE WARY OF WHAT YOU TYPE: YOU ONLY HAVE THREE ATTEMPTS FOR THE ACCESS CODE VERIFICATION - ELSE IMMEDIATE LOCKOUT FROM THE ORBITER ⚠️
+              </p>
+              <p className="text-red-300 text-center mt-2 text-sm">
+                Attempts Remaining: <span className="text-2xl font-bold text-red-400">{3 - failedAttempts}</span>
+              </p>
             </div>
-          )}
 
-          <button
-            onClick={handleValidate}
-            disabled={isValidating || authCode.some(d => !d) || !allWiresCorrect || isTimedOut}
-            className={`w-full py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-lg ${isValidating || authCode.some(d => !d) || !allWiresCorrect || isTimedOut
-              ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-lg shadow-green-500/50 hover:shadow-green-500/70'
-              }`}
-          >
-            {isValidating ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                VERIFYING REPAIR...
-              </>
-            ) : (
-              <>
-                <CheckCircle size={20} />
-                {isTimedOut
-                  ? 'MISSION FAILED - TIME EXPIRED'
-                  : allWiresCorrect
-                    ? 'SUBMIT VERIFICATION CODE'
-                    : 'FIX WIRING FIRST'
-                }
-              </>
+            {error && (
+              <div className="flex items-center gap-2 text-red-400 bg-red-900/30 border border-red-600/50 rounded-lg p-4">
+                <AlertTriangle size={20} />
+                <span>{error}</span>
+              </div>
             )}
-          </button>
 
-          <div className="text-center text-xs text-gray-500 border-t border-gray-700 pt-4">
-            <p>🔐 Secure authentication ensures hardware integrity before orbital insertion</p>
+            <button
+              onClick={handleValidate}
+              disabled={isValidating || authCode.some(d => !d) || !allWiresCorrect || isTimedOut || isLocked}
+              className={`w-full py-4 rounded-lg transition-all flex items-center justify-center gap-2 text-lg ${isValidating || authCode.some(d => !d) || !allWiresCorrect || isTimedOut || isLocked
+                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 shadow-lg shadow-green-500/50 hover:shadow-green-500/70'
+                }`}
+            >
+              {isValidating ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  VERIFYING REPAIR...
+                </>
+              ) : (
+                <>
+                  <CheckCircle size={20} />
+                  {isLocked
+                    ? 'SYSTEM LOCKED'
+                    : isTimedOut
+                      ? 'MISSION FAILED - TIME EXPIRED'
+                      : allWiresCorrect
+                        ? 'SUBMIT VERIFICATION CODE'
+                        : 'FIX WIRING FIRST'
+                  }
+                </>
+              )}
+            </button>
+
+            <div className="text-center text-xs text-gray-500 border-t border-gray-700 pt-4">
+              <p>🔐 Secure authentication ensures hardware integrity before orbital insertion</p>
+            </div>
           </div>
         </div>
       </div>
