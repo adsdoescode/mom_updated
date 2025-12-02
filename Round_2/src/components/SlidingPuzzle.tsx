@@ -121,9 +121,9 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
       const interval = setInterval(() => {
         if (puzzleStartTime !== null) {
           const elapsedTime = Date.now() - puzzleStartTime;
-          const THIRTY_SEVEN_MINUTES = 33 * 60 * 1000; // 33 minutes in milliseconds
+          const THIRTY_THREE_MINUTES = 33 * 60 * 1000; // 33 minutes in milliseconds
 
-          if (elapsedTime >= THIRTY_SEVEN_MINUTES) {
+          if (elapsedTime >= THIRTY_THREE_MINUTES) {
             setShowSolveButton(true);
             clearInterval(interval);
           }
@@ -354,6 +354,16 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
                     Solve Puzzle
                   </Button>
                 )}
+              </div>
+            )}
+
+            {showSolveButton && !isCompleted && (
+              <div className="flex justify-center mb-6">
+                <img
+                  src={`${import.meta.env.BASE_URL}solve_puzzle.gif`}
+                  alt="Solve Puzzle Hint"
+                  className="rounded-lg border border-amber-500/50 shadow-lg max-w-[200px]"
+                />
               </div>
             )}
 
