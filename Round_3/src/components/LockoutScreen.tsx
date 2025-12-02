@@ -41,6 +41,13 @@ export function LockoutScreen({ unlockAt }: LockoutScreenProps) {
           <div className="bg-slate-950/70 p-6 rounded-lg mb-8 border-2 border-red-600">
             <p className="text-4xl text-cyan-300 tracking-wide">{formatTimeLeft(timeLeftMs)}</p>
           </div>
+          <div className="flex justify-center">
+            <img
+              src={`${import.meta.env.BASE_URL}lockout_meme.jpeg`}
+              alt="Lockout Meme"
+              className="rounded-lg shadow-lg border border-red-500/30 max-w-full h-auto max-h-[300px]"
+            />
+          </div>
         </Card>
       </motion.div>
     </div>

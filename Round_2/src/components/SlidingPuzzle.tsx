@@ -121,7 +121,7 @@ export function SlidingPuzzle({ onComplete, isCompleted = false }: SlidingPuzzle
       const interval = setInterval(() => {
         if (puzzleStartTime !== null) {
           const elapsedTime = Date.now() - puzzleStartTime;
-          const THIRTY_SEVEN_MINUTES = 0 * 60 * 1000; // 33 minutes in milliseconds
+          const THIRTY_THREE_MINUTES = 33 * 60 * 1000; // 33 minutes in milliseconds
 
           if (elapsedTime >= THIRTY_THREE_MINUTES) {
             setShowSolveButton(true);

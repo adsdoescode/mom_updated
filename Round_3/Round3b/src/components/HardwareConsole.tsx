@@ -150,6 +150,13 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
             <div className="text-lg text-red-500 font-bold">
               IMMEDIATE ELIMINATION FROM MISSION
             </div>
+            <div className="flex justify-center mt-6">
+              <img
+                src={`${import.meta.env.BASE_URL}disqualified.jpeg`}
+                alt="Disqualified"
+                className="rounded-lg shadow-lg border border-red-500/50 max-w-full h-auto max-h-[400px]"
+              />
+            </div>
           </div>
         </div>
       )}

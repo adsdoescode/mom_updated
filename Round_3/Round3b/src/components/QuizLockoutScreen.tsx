@@ -53,6 +53,13 @@ export function QuizLockoutScreen({ unlockAt }: QuizLockoutScreenProps) {
                             {formatTimeLeft(timeLeftMs)}
                         </p>
                     </div>
+                    <div className="flex justify-center mb-6">
+                        <img
+                            src={`${import.meta.env.BASE_URL}rapid_fire_meme.jpeg`}
+                            alt="Rapid Fire Meme"
+                            className="rounded-lg shadow-lg border border-red-500/30 max-w-full h-auto max-h-[300px]"
+                        />
+                    </div>
                     <p className="text-gray-500 text-sm">
                         Please wait for the security cooldown to expire before re-attempting the qualification test.
                     </p>

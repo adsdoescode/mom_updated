@@ -460,7 +460,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                       href="/Mission_Critical_video.mp4"
                       download
                       className="text-amber-400 cursor-pointer hover:underline"
-                      onClick={() => handleHiddenClick('units', 'METRIC2IMPERIAL')}
+                      onClick={() => handleHiddenClick('units', 'Sneaky LiL Thing')}
                     >
                       metric units (Newtons)
                     </a>, while the ground-based software provided thruster data in{' '}
