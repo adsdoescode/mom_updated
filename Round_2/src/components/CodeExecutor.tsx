@@ -15,6 +15,8 @@ const getBuggyCode = (answers: { a: number; b: number; c: number }) => {
 
 // Mars Mission Navigation System
 // Decode coordinates from mission seeds
+// Do not change the name and type of the vaiables/function
+// Do not change the logic of the code as well
 
 int calculate_checksum(int value) {
     int total=0;

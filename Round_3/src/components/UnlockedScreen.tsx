@@ -55,7 +55,7 @@ export function UnlockedScreen() {
               <p><strong className="text-red-400">Sensor D – Torque Sensor</strong> was the imposter.</p>
               <p className="mt-3">⚠️ <strong>Critical Error Detected:</strong></p>
               <ul className="list-disc list-inside ml-4 space-y-1 text-sm">
-                <li>Expected range: <span className="text-green-400">900–990 N·m</span></li>
+                <li>Expected range: <span className="text-green-400">900–950 N·m</span></li>
                 <li>Measured range: <span className="text-yellow-400">915–975</span> (appeared correct)</li>
                 <li>The sensor was reporting in <strong>lbf·ft</strong> (pound-force feet) instead of N·m!</li>
                 <li>Clue: "My language is foreign" – hidden hint about imperial units</li>

@@ -135,7 +135,7 @@ export function MapReveal({ coordinates, onContinue, isCompleted = false }: MapR
         </CardHeader>
         <CardContent>
           <p className="text-slate-300">
-            This location is a famous space center in Florida. The password is the three-letter acronym for this facility.
+            This location is a famous space center. The password is the three-letter acronym for this facility.
           </p>
         </CardContent>
       </Card>
