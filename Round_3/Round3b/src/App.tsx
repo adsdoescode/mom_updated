@@ -9,6 +9,7 @@ import { Results } from './components/Results';
 import { WrongAnswer } from './components/WrongAnswer';
 import { HardwareConsole } from './components/HardwareConsole';
 import { Congratulations } from './components/Congratulations';
+import { QuizLockoutScreen } from './components/QuizLockoutScreen';
 
 const BUFFER_TIME = 180; // 3 minutes = 180 seconds
 
@@ -24,6 +25,36 @@ export default function App() {
   const [bufferTimeRemaining, setBufferTimeRemaining] = useState(0);
   const [showHardwareConsole, setShowHardwareConsole] = useState(false);
   const [showCongratulations, setShowCongratulations] = useState(false);
+
+  // Initialize lockout state from localStorage
+  const [lockoutEndTime, setLockoutEndTime] = useState<number | null>(() => {
+    const saved = localStorage.getItem('round3b_quiz_lockout');
+    return saved ? parseInt(saved, 10) : null;
+  });
+
+  // Lockout timer effect
+  useEffect(() => {
+    if (!lockoutEndTime) return;
+
+    const checkLockout = () => {
+      const now = Date.now();
+      if (now >= lockoutEndTime) {
+        setLockoutEndTime(null);
+        localStorage.removeItem('round3b_quiz_lockout');
+        // Reset game state when lockout expires
+        setGameStarted(false);
+        setQuizPassed(false);
+        setQuizFailed(false);
+      }
+    };
+
+    // Check immediately
+    checkLockout();
+
+    // Check every second
+    const interval = setInterval(checkLockout, 1000);
+    return () => clearInterval(interval);
+  }, [lockoutEndTime]);
 
   // Buffer timer effect
   useEffect(() => {
@@ -92,12 +123,14 @@ export default function App() {
   };
 
   const handleQuizFailedAllAttempts = () => {
-    // Return to briefing page with buffer time
+    // Trigger lockout
+    const endTime = Date.now() + (3 * 60 * 1000); // 3 minutes from now
+    setLockoutEndTime(endTime);
+    localStorage.setItem('round3b_quiz_lockout', endTime.toString());
+
     setGameStarted(false);
     setQuizPassed(false);
     setQuizFailed(false);
-    setIsInBuffer(true);
-    setBufferTimeRemaining(BUFFER_TIME);
   };
 
   const handleRetryQuiz = () => {
@@ -117,7 +150,11 @@ export default function App() {
           <p className="text-xl text-orange-400">"Find the Alien Beacon!"</p>
         </header>
 
-        {!hasAccess ? (
+
+
+        {lockoutEndTime ? (
+          <QuizLockoutScreen unlockAt={lockoutEndTime} />
+        ) : !hasAccess ? (
           <AccessGate onAccessGranted={handleAccessGranted} />
         ) : !gameStarted ? (
           <MissionBriefing
@@ -197,6 +234,6 @@ export default function App() {
           </>
         )}
       </div>
-    </div>
+    </div >
   );
 }
