@@ -165,7 +165,7 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
             <p className="text-sm text-gray-300 mt-3">
               {attemptsRemaining > 0
                 ? 'Review the questions carefully and try again!'
-                : 'You have used all your attempts. Returning to mission briefing with cooldown...'
+                : 'You have used all your attempts. Security lockout initiating...'
               }
             </p>
           </div>
@@ -181,7 +181,7 @@ export function Quiz({ onPass, onFail, onFailedAllAttempts }: QuizProps) {
             </button>
           ) : (
             <div className="text-center text-gray-400">
-              <p className="text-lg">⏳ Redirecting to mission briefing...</p>
+              <p className="text-lg">⏳ System Locking...</p>
             </div>
           )}
         </div>
