@@ -26,7 +26,7 @@ export type MCQ = {
   type: 'mcq';
   question: string;
   options: [string, string, string, string];
-  
+
 };
 
 // Obfuscation utility functions
@@ -132,7 +132,7 @@ export const questions: MCQ[] = [
     options: [
       '$672 million',
       '$327.6 million',
-      '$450 million',
+      '$150 million',
       '$210 million'
     ]
   },
@@ -216,7 +216,7 @@ export const questions: MCQ[] = [
   {
     id: 14,
     type: 'mcq',
-    question: `The mission briefing video thumbnail features a ruler graphic. Which annotation is shown near the ruler to emphasise the measurement systems?`,
+    question: `What is the general term for universally accepted units of measure used in science?`,
     options: [
       '"standard units"',
       '"imperial units"',
@@ -267,12 +267,12 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
     setSubmitted(true);
     const accessCode = calculateAccessCode();
     const allCorrect = allAnswersCorrect();
-    
+
     // Always notify about submission with access code
     if (onQuizSubmitted) {
       onQuizSubmitted(accessCode, allCorrect);
     }
-    
+
     // Also call onAllCorrect for backward compatibility
     if (allCorrect && onAllCorrect) {
       onAllCorrect(accessCode);
@@ -303,7 +303,7 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
           <pre>{QUIZ_RULES}</pre>
         </div>
         <div className="quiz-footer">
-          <button 
+          <button
             className="submit-button"
             onClick={() => setShowRules(false)}
           >
@@ -353,7 +353,7 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
                       type="radio"
                       name={`question-${question.id}`}
                       checked={isSelected}
-                      onChange={() => {}}
+                      onChange={() => { }}
                     />
                     <label><strong>{optionLetter}.</strong> {option}</label>
                   </button>
@@ -372,7 +372,7 @@ export default function Quiz({ onClose, onAllCorrect, onQuizSubmitted }: QuizPro
 
       <div className="quiz-footer">
         {!submitted && (
-          <button 
+          <button
             className="submit-button"
             onClick={handleSubmit}
             disabled={!allAnswered}

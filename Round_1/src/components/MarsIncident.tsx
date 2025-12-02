@@ -415,9 +415,9 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   <div key={index} className="flex gap-4">
                     <div className="flex flex-col items-center">
                       <div className={`w-4 h-4 rounded-full ${item.status === 'success' ? 'bg-green-500' :
-                          item.status === 'warning' ? 'bg-amber-500' :
-                            item.status === 'error' ? 'bg-red-500' :
-                              'bg-blue-500'
+                        item.status === 'warning' ? 'bg-amber-500' :
+                          item.status === 'error' ? 'bg-red-500' :
+                            'bg-blue-500'
                         }`} />
                       {index < 4 && <div className="w-0.5 h-full bg-slate-700 mt-2" />}
                     </div>
@@ -454,10 +454,14 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
                   <p>
                     <span className="text-red-400">Key Finding:</span> The spacecraft's
                     navigation software calculated trajectory corrections using{' '}
-                    <span className="text-amber-400 cursor-pointer hover:underline"
-                      onClick={() => handleHiddenClick('units', 'METRIC2IMPERIAL')}>
+                    <a
+                      href="/Mission_Critical_video.mp4"
+                      download
+                      className="text-amber-400 cursor-pointer hover:underline"
+                      onClick={() => handleHiddenClick('units', 'METRIC2IMPERIAL')}
+                    >
                       metric units (Newtons)
-                    </span>, while the ground-based software provided thruster data in{' '}
+                    </a>, while the ground-based software provided thruster data in{' '}
                     <span className="text-amber-400">imperial units (pound-force)</span>.
                   </p>
                   <p>
@@ -570,6 +574,7 @@ export function MarsIncident({ onPasswordFound }: MarsIncidentProps) {
           </p>
         </CardContent>
       </Card>
+
     </div>
   );
 }

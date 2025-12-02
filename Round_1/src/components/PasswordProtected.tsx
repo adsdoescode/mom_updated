@@ -68,12 +68,12 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
               </h3>
               <div className="space-y-3 text-slate-300 text-sm leading-relaxed">
                 <p>
-                  The Mars Climate Orbiter was lost on September 23, 1999, due to a navigation 
-                  error that caused the spacecraft to enter Mars' atmosphere at approximately 
+                  The Mars Climate Orbiter was lost on September 23, 1999, due to a navigation
+                  error that caused the spacecraft to enter Mars' atmosphere at approximately
                   57 kilometers altitude instead of the planned 140-150 kilometer altitude.
                 </p>
                 <p className="text-amber-300">
-                  <strong>Root Cause:</strong> A software interface specification discrepancy 
+                  <strong>Root Cause:</strong> A software interface specification discrepancy
                   between two mission-critical systems.
                 </p>
               </div>
@@ -84,12 +84,12 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
               <h3 className="text-red-400 mb-4">The Critical Error</h3>
               <div className="space-y-4 text-slate-300 text-sm">
                 <p>
-                  The spacecraft's navigation software, developed by NASA's Jet Propulsion 
-                  Laboratory, was programmed to interpret thruster force data in <strong>metric 
-                  units (Newtons)</strong>.
+                  The spacecraft's navigation software, developed by NASA's Jet Propulsion
+                  Laboratory, was programmed to interpret thruster force data in <strong>metric
+                    units (Newtons)</strong>.
                 </p>
                 <p>
-                  However, the ground-based software developed by Lockheed Martin Astronautics 
+                  However, the ground-based software developed by Lockheed Martin Astronautics
                   was outputting this data in <strong>imperial units (pound-force seconds)</strong>.
                 </p>
                 <div className="p-4 bg-slate-900/50 rounded border border-red-700/50 font-mono text-xs">
@@ -99,7 +99,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <p className="mt-2 text-amber-400">1 lbf ≈ 4.448 N</p>
                 </div>
                 <p>
-                  This discrepancy caused the spacecraft's trajectory to be miscalculated by 
+                  This discrepancy caused the spacecraft's trajectory to be miscalculated by
                   approximately 4.45 times throughout its nine-month journey to Mars.
                 </p>
               </div>
@@ -112,28 +112,28 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                 <div className="flex items-start gap-2">
                   <span className="text-red-400 mt-1">•</span>
                   <p>
-                    <strong>Inadequate Testing:</strong> The units mismatch was not caught during 
+                    <strong>Inadequate Testing:</strong> The units mismatch was not caught during
                     integration testing or simulation phases.
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-red-400 mt-1">•</span>
                   <p>
-                    <strong>Communication Breakdown:</strong> Different engineering teams used 
+                    <strong>Communication Breakdown:</strong> Different engineering teams used
                     different unit conventions without proper documentation or verification.
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-red-400 mt-1">•</span>
                   <p>
-                    <strong>Schedule Pressure:</strong> The "faster, better, cheaper" approach 
+                    <strong>Schedule Pressure:</strong> The "faster, better, cheaper" approach
                     led to reduced oversight and quality assurance measures.
                   </p>
                 </div>
                 <div className="flex items-start gap-2">
                   <span className="text-red-400 mt-1">•</span>
                   <p>
-                    <strong>Warning Signs Ignored:</strong> Anomalies in trajectory corrections 
+                    <strong>Warning Signs Ignored:</strong> Anomalies in trajectory corrections
                     were noted but not thoroughly investigated.
                   </p>
                 </div>
@@ -192,8 +192,8 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
             {/* Footer */}
             <div className="pt-6 border-t border-slate-700/50 text-center space-y-4">
               <p className="text-slate-500 text-sm">
-                This $327.6 million mission failure became one of the most studied cases in 
-                engineering education, highlighting the critical importance of attention to 
+                This $327.6 million mission failure became one of the most studied cases in
+                engineering education, highlighting the critical importance of attention to
                 detail and proper systems engineering practices.
               </p>
               <p className="text-green-400 text-sm">
@@ -225,7 +225,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm">1</span>
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Access the Round 2 Investigation Platform:</p>
-                    <button 
+                    <button
                       onClick={() => {
                         // Set session access token before navigating
                         sessionStorage.setItem('round2_access_granted', 'true');
@@ -243,8 +243,8 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <span className="flex-shrink-0 w-6 h-6 rounded-full bg-purple-600 text-white flex items-center justify-center text-sm">2</span>
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Download the Investigation Files:</p>
-                    <a 
-                      href="/download/mission-document" 
+                    <a
+                      href="Round_1/public/Mission_Critical_Document.docx"
                       download="Mission_Critical_Document.docx"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
                     >
@@ -321,8 +321,8 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
               </Alert>
             )}
 
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-full bg-red-600 hover:bg-red-700"
               disabled={!password}
             >
@@ -334,7 +334,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
           <div className="text-center pt-4 border-t border-slate-700/50">
             <p className="text-xs text-slate-500">
               Haven't found the password yet? Return to the Incident Report and look for clues there. This password hidden in the report gives you an insight into what actually went wrong.
-              
+
             </p>
           </div>
         </div>
