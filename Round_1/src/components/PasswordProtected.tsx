@@ -244,7 +244,7 @@ export function PasswordProtected({ discoveredPassword }: PasswordProtectedProps
                   <div className="flex-1">
                     <p className="text-slate-300 text-sm mb-2">Download the Investigation Files:</p>
                     <a
-                      href="Round_1/public/Mission_Critical_Document.docx"
+                      href="/Mission_Critical_Document.docx"
                       download="Mission_Critical_Document.docx"
                       className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm"
                     >
