@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { XCircle } from 'lucide-react';
+import { XCircle, Lock } from 'lucide-react';
 import { AccessGate } from './components/AccessGate';
 import { MissionBriefing } from './components/MissionBriefing';
 import { Quiz } from './components/Quiz';
@@ -14,7 +14,8 @@ import { QuizLockoutScreen } from './components/QuizLockoutScreen';
 const BUFFER_TIME = 180; // 3 minutes = 180 seconds
 
 export default function App() {
-  const [hasAccess, setHasAccess] = useState(false);
+  const [hasAccess, setHasAccess] = useState<boolean | null>(null);
+  const [isGateOpen, setIsGateOpen] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
   const [quizPassed, setQuizPassed] = useState(false);
   const [quizFailed, setQuizFailed] = useState(false);
@@ -74,6 +75,35 @@ export default function App() {
     return () => clearInterval(timer);
   }, [isInBuffer]);
 
+  // Check for session access on mount
+  useEffect(() => {
+    // Check for redirect flag from HardwareConsole refresh
+    if (localStorage.getItem('redirect_to_root') === 'true') {
+      localStorage.removeItem('redirect_to_root');
+      window.location.href = '/';
+      return;
+    }
+
+    const accessGranted = sessionStorage.getItem('round3b_access_granted') === 'true';
+    setHasAccess(accessGranted);
+
+    if (!accessGranted) {
+      // Clear any stale data
+      sessionStorage.removeItem('round3b_access_granted');
+    }
+  }, []);
+
+  // Disable right-click
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      e.preventDefault();
+    };
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  }, []);
+
   // Scroll to top on game state changes
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -92,7 +122,7 @@ export default function App() {
   };
 
   const handleAccessGranted = () => {
-    setHasAccess(true);
+    setIsGateOpen(true);
   };
 
   const handleReset = () => {
@@ -104,6 +134,7 @@ export default function App() {
     setTrialsRemaining(2);
     setShowHardwareConsole(false);
     setShowCongratulations(false);
+    // Note: We don't reset isGateOpen or hasAccess here to keep them logged in
   };
 
   const handleShowHardwareConsole = () => {
@@ -155,6 +186,54 @@ export default function App() {
         {lockoutEndTime ? (
           <QuizLockoutScreen unlockAt={lockoutEndTime} />
         ) : !hasAccess ? (
+          <div className="min-h-screen bg-gradient-to-b from-pink-100 via-white to-white flex items-center justify-center p-4 font-sans fixed inset-0 z-50">
+            <div className="max-w-4xl w-full bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl overflow-hidden">
+              <div className="p-12 flex flex-col items-center">
+                {/* Lock Icon */}
+                <div className="mb-8 opacity-20">
+                  <Lock className="w-24 h-24 text-slate-400" />
+                </div>
+
+                {/* Title */}
+                <h1 className="text-2xl text-slate-600 tracking-widest mb-4">
+                  ACCESS DENIED
+                </h1>
+
+                {/* Subtitle */}
+                <div className="flex items-center gap-2 mb-6">
+                  <Lock className="w-4 h-4 text-amber-500" />
+                  <span className="text-amber-500 font-bold tracking-wide text-sm">
+                    CLEARANCE LEVEL INSUFFICIENT
+                  </span>
+                </div>
+
+                {/* Error Code Box */}
+                <div className="w-full max-w-3xl mb-8">
+                  <div className="relative w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 text-center font-mono tracking-widest uppercase">
+                    ERROR CODE: R3B_UNAUTHORIZED
+                  </div>
+                </div>
+
+                {/* Grey Message Box */}
+                <div className="w-full max-w-4xl bg-slate-500 rounded-lg p-8 mb-8 text-center shadow-inner">
+                  <p className="text-slate-300 text-lg">
+                    This area is <span className="text-amber-400 font-bold">restricted</span> to authorized personnel only.
+                  </p>
+                  <p className="text-slate-300 text-lg">
+                    Complete Round 3 Data Validation to gain access credentials.
+                  </p>
+                </div>
+
+                {/* Footer Message */}
+                <div className="text-center">
+                  <p className="text-slate-400 text-xs flex items-center justify-center gap-2">
+                    Nice try, you sneaky lil thing... but you'll need to solve the previous mission first! 🕵️
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : !isGateOpen ? (
           <AccessGate onAccessGranted={handleAccessGranted} />
         ) : !gameStarted ? (
           <MissionBriefing

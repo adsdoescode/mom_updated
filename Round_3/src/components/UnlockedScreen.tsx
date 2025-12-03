@@ -98,7 +98,10 @@ export function UnlockedScreen() {
               </a>
             </Button>
             <Button asChild variant="outline" className="px-6 ml-4">
-              <a href="/round3/Round3b/">
+              <a
+                href="/round3/Round3b/"
+                onClick={() => sessionStorage.setItem('round3b_access_granted', 'true')}
+              >
                 Proceed to Telemetry Decoding
               </a>
             </Button>

@@ -80,6 +80,28 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
     };
   }, []);
 
+  // Handle browser refresh
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Clear game state
+      sessionStorage.clear();
+      localStorage.removeItem('round3b_quiz_lockout');
+      localStorage.removeItem('sleepUntil');
+
+      // Set flag to redirect to root on next load
+      localStorage.setItem('redirect_to_root', 'true');
+
+      e.preventDefault();
+      e.returnValue = ''; // Trigger browser confirmation
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
