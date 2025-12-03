@@ -9,6 +9,7 @@ import { AlertCircle, Clock } from 'lucide-react';
 const TIMER_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
 const TIMER_STORAGE_KEY = 'mission_timer_start';
 const TIMER_ACCESS_KEY = 'mission_timer_active';
+const TIMER_EXPIRED_KEY = 'mission_timer_expired';
 
 export default function App() {
   const [discoveredPassword, setDiscoveredPassword] = useState<string>('');
@@ -17,10 +18,18 @@ export default function App() {
   const [timerExpired, setTimerExpired] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<string>("briefing");
 
-  // Load timer state from sessionStorage on mount (persists on reload, clears on new session)
+  // Load timer state from localStorage on mount (persists across tabs/reloads)
   useEffect(() => {
-    const savedStartTime = sessionStorage.getItem(TIMER_STORAGE_KEY);
-    const accessGranted = sessionStorage.getItem(TIMER_ACCESS_KEY) === 'true';
+    // Check if already expired
+    if (localStorage.getItem(TIMER_EXPIRED_KEY) === 'true') {
+      setTimerExpired(true);
+      setTimerStarted(true); // Technically started, just finished
+      setTimeRemaining(0);
+      return;
+    }
+
+    const savedStartTime = localStorage.getItem(TIMER_STORAGE_KEY);
+    const accessGranted = localStorage.getItem(TIMER_ACCESS_KEY) === 'true';
 
     if (savedStartTime && accessGranted) {
       const startTime = parseInt(savedStartTime, 10);
@@ -33,8 +42,8 @@ export default function App() {
       } else {
         setTimerExpired(true);
         setTimeRemaining(0);
-        sessionStorage.removeItem(TIMER_STORAGE_KEY);
-        sessionStorage.removeItem(TIMER_ACCESS_KEY);
+        localStorage.setItem(TIMER_EXPIRED_KEY, 'true');
+        // We keep the start time to know it ran, but it's effectively done
       }
     }
   }, []);
@@ -50,6 +59,25 @@ export default function App() {
     };
   }, []);
 
+  // Disable inspect keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if (
+        e.key === 'F12' ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        ((e.ctrlKey || e.metaKey) && e.key === 'U')
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Scroll to top on mount and tab change
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -60,7 +88,14 @@ export default function App() {
     if (!timerStarted || timerExpired) return;
 
     const interval = setInterval(() => {
-      const savedStartTime = sessionStorage.getItem(TIMER_STORAGE_KEY);
+      // Check for expiration from other tabs
+      if (localStorage.getItem(TIMER_EXPIRED_KEY) === 'true') {
+        setTimerExpired(true);
+        setTimeRemaining(0);
+        return;
+      }
+
+      const savedStartTime = localStorage.getItem(TIMER_STORAGE_KEY);
       if (savedStartTime) {
         const startTime = parseInt(savedStartTime, 10);
         const elapsed = Date.now() - startTime;
@@ -71,8 +106,7 @@ export default function App() {
         } else {
           setTimerExpired(true);
           setTimeRemaining(0);
-          sessionStorage.removeItem(TIMER_STORAGE_KEY);
-          sessionStorage.removeItem(TIMER_ACCESS_KEY);
+          localStorage.setItem(TIMER_EXPIRED_KEY, 'true');
         }
       }
     }, 1000);
@@ -81,9 +115,14 @@ export default function App() {
   }, [timerStarted, timerExpired]);
 
   const handleStartTimer = () => {
+    // Prevent restart if already running or expired
+    if (localStorage.getItem(TIMER_STORAGE_KEY) || localStorage.getItem(TIMER_EXPIRED_KEY) === 'true') {
+      return;
+    }
+
     const startTime = Date.now();
-    sessionStorage.setItem(TIMER_STORAGE_KEY, startTime.toString());
-    sessionStorage.setItem(TIMER_ACCESS_KEY, 'true');
+    localStorage.setItem(TIMER_STORAGE_KEY, startTime.toString());
+    localStorage.setItem(TIMER_ACCESS_KEY, 'true');
     setTimerStarted(true);
     setTimeRemaining(TIMER_DURATION);
   };

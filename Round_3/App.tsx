@@ -178,6 +178,25 @@ export default function App() {
     };
   }, []);
 
+  // Disable inspect keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if (
+        e.key === 'F12' ||
+        ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+        ((e.ctrlKey || e.metaKey) && e.key === 'U')
+      ) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   // Scroll to top on mount and state changes
   useEffect(() => {
     window.scrollTo(0, 0);
