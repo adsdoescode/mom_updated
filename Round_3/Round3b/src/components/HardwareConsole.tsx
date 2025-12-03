@@ -58,7 +58,7 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
 
     const handlePopState = () => {
       // Show confirmation dialog
-      const leave = window.confirm("Do you wanna leave the site?");
+      const leave = window.confirm("WARNING: ARE YOU SURE YOU WANT TO LEAVE? DONT BLAME US IF SOMETHING GOES WRONG");
       if (leave) {
         // Clear game state
         sessionStorage.clear();
