@@ -70,7 +70,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
         <CardContent>
           <div className="bg-slate-800 p-4 rounded mb-4 border border-slate-700">
             <p className="text-slate-200 italic">
-              "I am a third of the straight, but a sixth of the round. I am the specific speed where a mile equals a minute. I am the age of a Diamond, yet I am born and die every hour. I am five dozen, but I am not eggs. What number am I?"
+              "I am the age of a diamond, yet I am born and die every hour"
             </p>
           </div>
           <div className="flex gap-2">
@@ -101,7 +101,7 @@ export function RiddleRound({ onComplete, isCompleted = false }: RiddleRoundProp
         <CardContent>
           <div className="bg-slate-800 p-4 rounded mb-4 border border-slate-700">
             <p className="text-slate-200 italic">
-              "Before the 2011 victory lap, I was the original miracle. I am the year the 'underdogs' stunned the West Indies at Lord's. I am also the literal title of the Ranveer Singh movie that reenacted that glory. Drop the century and tell me the number that changed cricket history."
+              "Before the 2011 victory lap, I was the original miracle. I am the year the 'underdogs' stunned the West Indies at Lord's. Drop the century and tell me the number that changed cricket history."
             </p>
           </div>
           <div className="flex gap-2">

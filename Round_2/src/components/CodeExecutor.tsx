@@ -49,7 +49,7 @@ double decode_longitude(int seed_b, int seed_c) {
 }
 
 int main() {
-    // Mission seeds adjusted to give ~28 and ~80
+
     int seed_a = ${answers.a};
     int seed_b = ${answers.b};
     int seed_c = ${answers.c}
