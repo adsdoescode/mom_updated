@@ -48,6 +48,36 @@ export function HardwareConsole({ onComplete }: HardwareConsoleProps) {
     }, 1000);
 
     return () => clearInterval(timer);
+
+  }, []);
+
+  // Restrict back navigation
+  useEffect(() => {
+    // Push a state to trap the back button
+    window.history.pushState(null, '', window.location.href);
+
+    const handlePopState = () => {
+      // Show confirmation dialog
+      const leave = window.confirm("Do you wanna leave the site?");
+      if (leave) {
+        // Clear game state
+        sessionStorage.clear();
+        localStorage.removeItem('round3b_quiz_lockout');
+        localStorage.removeItem('sleepUntil');
+
+        // Redirect to Round 1 (root)
+        window.location.href = '/';
+      } else {
+        // Stay on page, push state again to re-trap
+        window.history.pushState(null, '', window.location.href);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
   }, []);
 
   const formatTime = (seconds: number) => {
